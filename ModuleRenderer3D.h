@@ -26,7 +26,9 @@ public:
 public:
 
 	Light lights[MAX_LIGHTS];
-	SDL_GLContext context;
+	SDL_GLContext gl_context;
 	mat3x3 NormalMatrix;
 	mat4x4 ModelMatrix, ViewMatrix, ProjectionMatrix;
+
+	ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 0.00f);
 };
