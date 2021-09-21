@@ -12,6 +12,14 @@
 #include "ModuleCamera3D.h"
 #include "ModulePhysics3D.h"
 
+#include "SDL.h"
+#include "SDL_opengl.h"
+
+#include "imgui.h"
+#include "imgui_impl_sdl.h"
+#include "imgui_impl_opengl2.h"
+#include <stdio.h>
+
 class Application
 {
 public:
@@ -22,6 +30,8 @@ public:
 	ModuleRenderer3D* renderer3D;
 	ModuleCamera3D* camera;
 	ModulePhysics3D* physics;
+
+	SDL_GLContext gl_context;
 
 private:
 

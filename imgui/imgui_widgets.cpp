@@ -4755,7 +4755,7 @@ bool ImGui::InputTextEx(const char* label, const char* hint, char* buf, int buf_
 
 bool ImGui::ColorEdit3(const char* label, float col[3], ImGuiColorEditFlags flags)
 {
-    return ColorEdit4(label, col, flags | ImGuiColorEditFlags_NoAlpha);
+    return ColorEdit4(label, col, flags | ImGuiColorEditFlags_AlphaBar);
 }
 
 // Edit colors components (each component in 0.0f..1.0f range).
