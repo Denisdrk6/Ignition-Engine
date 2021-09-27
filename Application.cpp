@@ -29,12 +29,19 @@ Application::Application()
 Application::~Application()
 {
 	std::list<Module*>::iterator iterator = list_modules.end();
+	iterator--;
+	Module* item;
 
-	while(*iterator != NULL)
+	while (iterator != list_modules.begin())
 	{
-		delete *iterator;
-		iterator = iterator--;
+		item = *iterator;
+		iterator--;
+		delete item;
 	}
+
+	// Call last module delete (it's not called on the loop)
+	item = *iterator;
+	delete item;
 }
 
 bool Application::Init()
@@ -45,7 +52,7 @@ bool Application::Init()
 	std::list<Module*>::iterator iterator = list_modules.begin();
 	Module* item;
 
-	while(*iterator != NULL && ret == true)
+	while(iterator != list_modules.end() && ret == true)
 	{
 		item = *iterator;
 		ret = item->Init();
@@ -53,10 +60,10 @@ bool Application::Init()
 	}
 
 	// After all Init calls we call Start() in all modules
-	LOG("Application Start --------------");
+	MYLOG("Application Start --------------");
 	iterator = list_modules.begin();
 
-	while(*iterator != NULL && ret == true)
+	while(iterator != list_modules.end() && ret == true)
 	{
 		item = *iterator;
 		ret = item->Start();
@@ -88,7 +95,7 @@ update_status Application::Update()
 	std::list<Module*>::iterator iterator = list_modules.begin();
 	Module* item;
 
-	while(*iterator != NULL && ret == UPDATE_CONTINUE)
+	while(iterator != list_modules.end() && ret == UPDATE_CONTINUE)
 	{
 		item = *iterator;
 		ret = item->PreUpdate(dt);
@@ -97,7 +104,7 @@ update_status Application::Update()
 
 	iterator = list_modules.begin();
 
-	while(*iterator != NULL && ret == UPDATE_CONTINUE)
+	while(iterator != list_modules.end() && ret == UPDATE_CONTINUE)
 	{
 		item = *iterator;
 		ret = item->Update(dt);
@@ -106,7 +113,7 @@ update_status Application::Update()
 
 	iterator = list_modules.begin();
 
-	while(*iterator != NULL && ret == UPDATE_CONTINUE)
+	while(iterator != list_modules.end() && ret == UPDATE_CONTINUE)
 	{
 		item = *iterator;
 		ret = item->PostUpdate(dt);
@@ -121,14 +128,20 @@ bool Application::CleanUp()
 {
 	bool ret = true;
 	std::list<Module*>::iterator iterator = list_modules.end();
+	iterator--;
 	Module* item;
 
-	while(*iterator != NULL && ret == true)
+	while(iterator != list_modules.begin() && ret == true)
 	{
 		item = *iterator;
 		ret = item->CleanUp();
 		iterator--;
 	}
+
+	// Call last module cleanup (it's not called on the loop)
+	item = *iterator;
+	ret = item->CleanUp();
+
 	return ret;
 }
 

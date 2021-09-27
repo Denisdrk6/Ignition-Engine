@@ -13,7 +13,6 @@
     <ClCompile Include="ModuleRenderer3D.cpp" />
     <ClCompile Include="ModuleSceneIntro.cpp" />
     <ClCompile Include="ModuleWindow.cpp" />
-    <ClCompile Include="Primitive.cpp" />
     <ClCompile Include="Timer.cpp" />
     <ClCompile Include="imgui\imgui.cpp">
       <Filter>imgui</Filter>
@@ -36,6 +35,7 @@
     <ClCompile Include="imgui\imgui_widgets.cpp">
       <Filter>imgui</Filter>
     </ClCompile>
+    <ClCompile Include="Primitive.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
@@ -50,7 +50,6 @@
     <ClInclude Include="ModuleInput.h" />
     <ClInclude Include="ModuleSceneIntro.h" />
     <ClInclude Include="ModuleWindow.h" />
-    <ClInclude Include="Primitive.h" />
     <ClInclude Include="Timer.h" />
     <ClInclude Include="imgui\imconfig.h">
       <Filter>imgui</Filter>
@@ -67,6 +66,7 @@
     <ClInclude Include="imgui\imgui_internal.h">
       <Filter>imgui</Filter>
     </ClInclude>
+    <ClInclude Include="Primitive.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="imgui">

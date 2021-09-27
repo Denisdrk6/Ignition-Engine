@@ -13,7 +13,7 @@ ModuleSceneIntro::~ModuleSceneIntro()
 // Load assets
 bool ModuleSceneIntro::Start()
 {
-	LOG("Loading Intro assets");
+	MYLOG("Loading Intro assets");
 	bool ret = true;
 
     // Setup SDL
@@ -33,9 +33,10 @@ bool ModuleSceneIntro::Start()
 // Update: draw background
 update_status ModuleSceneIntro::Update(float dt)
 {
-	Plane p(0, 1, 0, 0);
-	p.axis = true;
-	p.Render();
+
+    PrimPlane p(0, 1, 0, 0);
+    p.axis = true;
+    p.Render();
 
     // 1. Show the big demo window (Most of the sample code is in ImGui::ShowDemoWindow()! You can browse its code to learn more about Dear ImGui!).
     if (show_demo_window)
@@ -80,7 +81,7 @@ update_status ModuleSceneIntro::Update(float dt)
 // Load assets
 bool ModuleSceneIntro::CleanUp()
 {
-    LOG("Unloading Intro scene");
+    MYLOG("Unloading Intro scene");
 
     return true;
 }

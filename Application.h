@@ -20,6 +20,8 @@
 #include <stdio.h>
 #include <list>
 
+#include "MathGeoLib.h"
+
 class Application
 {
 public:
@@ -29,9 +31,8 @@ public:
 	ModuleRenderer3D* renderer3D;
 	ModuleCamera3D* camera;
 	ModulePhysics3D* physics;
-
+	
 	SDL_GLContext gl_context;
-
 private:
 	
 	Timer	ms_timer;

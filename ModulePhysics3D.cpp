@@ -1,7 +1,6 @@
 #include "Globals.h"
 #include "Application.h"
 #include "ModulePhysics3D.h"
-#include "Primitive.h"
 
 // TODO 1: ...and the 3 libraries based on how we compile (Debug or Release)
 // use the _DEBUG preprocessor define
@@ -30,7 +29,7 @@ ModulePhysics3D::~ModulePhysics3D()
 // ---------------------------------------------------------
 bool ModulePhysics3D::Start()
 {
-	LOG("Creating Physics environment");
+	MYLOG("Creating Physics environment");
 
 	// TODO 3: Create the world and set default gravity
 	// Have gravity defined in a macro!
@@ -83,7 +82,7 @@ update_status ModulePhysics3D::PostUpdate(float dt)
 // Called before quitting
 bool ModulePhysics3D::CleanUp()
 {
-	LOG("Destroying 3D Physics simulation");
+	MYLOG("Destroying 3D Physics simulation");
 
 	// TODO 3: ... and destroy the world here!
 
@@ -110,12 +109,12 @@ void DebugDrawer::drawContactPoint(const btVector3& PointOnB, const btVector3& n
 
 void DebugDrawer::reportErrorWarning(const char* warningString)
 {
-	LOG("Bullet warning: %s", warningString);
+	MYLOG("Bullet warning: %s", warningString);
 }
 
 void DebugDrawer::draw3dText(const btVector3& location, const char* textString)
 {
-	LOG("Bullet draw text: %s", textString);
+	MYLOG("Bullet draw text: %s", textString);
 }
 
 void DebugDrawer::setDebugMode(int debugMode)

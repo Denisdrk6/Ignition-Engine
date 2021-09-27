@@ -3,9 +3,6 @@
 #include <gl/GL.h>
 #include <gl/GLU.h>
 #include "Primitive.h"
-#include "glut/glut.h"
-
-#pragma comment (lib, "glut/glut32.lib")
 
 // ------------------------------------------------------------
 Primitive::Primitive() : transform(IdentityMatrix), color(White), wire(false), axis(false), type(PrimitiveTypes::Primitive_Point)
@@ -170,7 +167,7 @@ Sphere::Sphere(float radius) : Primitive(), radius(radius)
 
 void Sphere::InnerRender() const
 {
-	glutSolidSphere(radius, 25, 25);
+	//glutSolidSphere(radius, 25, 25);
 }
 
 
@@ -247,17 +244,17 @@ void Line::InnerRender() const
 }
 
 // PLANE ==================================================
-Plane::Plane() : Primitive(), normal(0, 1, 0), constant(1)
+PrimPlane::PrimPlane() : Primitive(), normal(0, 1, 0), constant(1)
 {
 	type = PrimitiveTypes::Primitive_Plane;
 }
 
-Plane::Plane(float x, float y, float z, float d) : Primitive(), normal(x, y, z), constant(d)
+PrimPlane::PrimPlane(float x, float y, float z, float d) : Primitive(), normal(x, y, z), constant(d)
 {
 	type = PrimitiveTypes::Primitive_Plane;
 }
 
-void Plane::InnerRender() const
+void PrimPlane::InnerRender() const
 {
 	glLineWidth(1.0f);
 
