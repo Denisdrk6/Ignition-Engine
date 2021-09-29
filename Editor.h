@@ -45,6 +45,7 @@ private:
 	bool toolMenu = false;
 	bool showcaseDemo = false;
 	bool show_another_window = false;
+	bool config = false;
 };
 
 #endif // __Editor_H__

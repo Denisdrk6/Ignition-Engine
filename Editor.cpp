@@ -37,6 +37,40 @@ bool Editor::Start()
 
 update_status Editor::Update(float dt)
 {
+
+
+	//ImGui::Begin("Tool Bar", &toolMenu, ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoDecoration);
+	//ImGui::BeginMainMenuBar();
+	if (ImGui::BeginMainMenuBar())
+	{
+		if (ImGui::BeginMenu("Menu"))
+		{
+			if (ImGui::MenuItem("Configuration")) config = !config;
+
+			ImGui::EndMenu();
+		}
+		if (ImGui::BeginMenu("Examples"))
+		{
+			ImGui::EndMenu();
+		}
+
+		if (ImGui::BeginMenu("Help"))
+		{
+			if (ImGui::MenuItem("GuiDemo")) showcaseDemo = !showcaseDemo;
+
+			if (ImGui::MenuItem("Documentation")) App->RequestBrowser("https://github.com/d0n3val/Edu-Game-Engine/wiki");
+
+			if (ImGui::MenuItem("Download latest")) App->RequestBrowser("https://github.com/d0n3val/Edu-Game-Engine/releases");
+
+			if (ImGui::MenuItem("Report a bug")) App->RequestBrowser("https://github.com/d0n3val/Edu-Game-Engine/issues");
+
+			if (ImGui::MenuItem("About")) about->SwitchActive();
+
+			ImGui::EndMenu();
+		}
+		ImGui::EndMainMenuBar();
+	}
+
 	// 1. Show the big demo window (Most of the sample code is in ImGui::ShowDemoWindow()! You can browse its code to learn more about Dear ImGui!).
 	if (showcaseDemo)
 		ImGui::ShowDemoWindow(&showcaseDemo);
@@ -74,39 +108,29 @@ update_status Editor::Update(float dt)
 		ImGui::End();
 	}
 
-	//ImGui::Begin("Tool Bar", &toolMenu, ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoDecoration);
-	//ImGui::BeginMainMenuBar();
-	if (ImGui::BeginMainMenuBar())
+	if (config)
 	{
-		if (ImGui::BeginMenu("Menu"))
+		ImGui::Begin("Configuration", &config);
+		ImGui::Text("Options");
+
+		if (ImGui::TreeNode("Application"))
 		{
-			ImGui::EndMenu();
+			ImGui::LabelText("App name", TITLE);
+			ImGui::LabelText("Organization", "CITM students");
+			ImGui::SliderInt("Max FPS", &App->maxFPS, 1, 60);
+
+			char title[25];
+			sprintf_s(title, 25, "Framerate %.1f", App->fps_log[App->fps_log.size() - 1]);
+			ImGui::PlotHistogram("##FRAMERATE", &App->fps_log[0], App->fps_log.size(), 0, title, 0.0f, 100.0f, ImVec2(310, 100));
+
+			sprintf_s(title, 25, "Miliseconds %.1f", App->ms_log[App->ms_log.size() - 1]);
+			ImGui::PlotHistogram("##MILISECONDS", &App->ms_log[0], App->ms_log.size(), 0, title, 0.0f, 40.0f, ImVec2(310, 100));
+
+			ImGui::TreePop();
 		}
-		if (ImGui::BeginMenu("Examples"))
-		{
-			ImGui::EndMenu();
-		}
 
-		if (ImGui::BeginMenu("Help"))
-		{
-			if (ImGui::MenuItem("GuiDemo")) showcaseDemo = !showcaseDemo;
-
-			if (ImGui::MenuItem("Documentation")) App->RequestBrowser("https://github.com/d0n3val/Edu-Game-Engine/wiki");
-
-			if (ImGui::MenuItem("Download latest")) App->RequestBrowser("https://github.com/d0n3val/Edu-Game-Engine/releases");
-
-			if (ImGui::MenuItem("Report a bug")) App->RequestBrowser("https://github.com/d0n3val/Edu-Game-Engine/issues");
-
-			if (ImGui::MenuItem("About")) about->SwitchActive();
-
-			ImGui::EndMenu();
-		}
-		ImGui::EndMainMenuBar();
+		ImGui::End();
 	}
-
-	//ImGui::EndMainMenuBar();
-
-	//ImGui::End();
 	
 
 	return update_status::UPDATE_CONTINUE;

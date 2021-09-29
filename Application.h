@@ -35,11 +35,21 @@ public:
 	ModulePhysics3D* physics;
 	
 	SDL_GLContext gl_context;
+
+	std::vector<float> fps_log;
+	std::vector<float> ms_log;
+
+	int maxFPS = 60.0f;
+
 private:
 	
 	Timer	ms_timer;
 	float	dt;
+	float delayTime = 0.0f; //Used for capping fps
+
 	std::list<Module*> list_modules;
+
+	int vectorAllocator = 0;
 
 public:
 

@@ -26,6 +26,9 @@ Application::Application()
 
 	// Renderer last!
 	AddModule(renderer3D);
+
+	ms_log.resize(60);
+	fps_log.resize(60);
 }
 
 Application::~Application()
@@ -79,13 +82,33 @@ bool Application::Init()
 // ---------------------------------------------
 void Application::PrepareUpdate()
 {
-	dt = (float)ms_timer.Read() / 1000.0f;
+	float ms = (float)ms_timer.Read();
+
 	ms_timer.Start();
+
+	if(ms_log[59] != 0.0f)
+	{
+		std::rotate(ms_log.begin(), ms_log.begin() + 1, ms_log.end());
+		std::rotate(fps_log.begin(), fps_log.begin() + 1, fps_log.end());
+	}
+
+	ms_log.at(vectorAllocator) = ms;
+	fps_log.at(vectorAllocator) = (int)(1000.0f / ms);
+	//fps_log.at(vectorAllocator) = maxFPS;
+
+	if (vectorAllocator < 59) vectorAllocator++;
+
+	dt = ms / 1000.0f;
 }
 
 // ---------------------------------------------
 void Application::FinishUpdate()
 {
+	float maxMsPerFrame = (1000.0f / maxFPS); // Calculate max ms per frame
+	float thisFrameMs = ms_timer.Read();
+
+	if (thisFrameMs < maxMsPerFrame)
+		SDL_Delay((Uint32)(maxMsPerFrame - thisFrameMs)); // Delay to cap framerate
 }
 
 // Call PreUpdate, Update and PostUpdate on all modules
