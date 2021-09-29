@@ -7,6 +7,7 @@
 #include "ModuleWindow.h"
 #include "ModuleInput.h"
 #include "ModuleSceneIntro.h"
+#include "Editor.h"
 #include "ModuleRenderer3D.h"
 #include "ModuleCamera3D.h"
 #include "ModulePhysics3D.h"
@@ -28,6 +29,7 @@ public:
 	ModuleWindow* window;
 	ModuleInput* input;
 	ModuleSceneIntro* scene_intro;
+	Editor* editor;
 	ModuleRenderer3D* renderer3D;
 	ModuleCamera3D* camera;
 	ModulePhysics3D* physics;
@@ -47,6 +49,8 @@ public:
 	bool Init();
 	update_status Update();
 	bool CleanUp();
+
+	void RequestBrowser(const char* link);
 
 private:
 

@@ -5,6 +5,7 @@ Application::Application()
 	window = new ModuleWindow(this);
 	input = new ModuleInput(this);
 	scene_intro = new ModuleSceneIntro(this);
+	editor = new Editor(this);
 	renderer3D = new ModuleRenderer3D(this);
 	camera = new ModuleCamera3D(this);
 	physics = new ModulePhysics3D(this);
@@ -21,6 +22,7 @@ Application::Application()
 	
 	// Scenes
 	AddModule(scene_intro);
+	AddModule(editor);
 
 	// Renderer last!
 	AddModule(renderer3D);
@@ -148,4 +150,9 @@ bool Application::CleanUp()
 void Application::AddModule(Module* mod)
 {
 	list_modules.push_back(mod);
+}
+
+void Application::RequestBrowser(const char* link)
+{
+	ShellExecute(NULL, "open", link, NULL, NULL, SW_SHOWNORMAL);
 }
