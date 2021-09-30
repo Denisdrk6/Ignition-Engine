@@ -20,7 +20,9 @@ public:
 	bool CleanUp();
 
 	void SetTitle(const char* title);
-
+	void SetFullscreenDesk(bool fullscreenDesk);
+	void SetFullscreen(bool fullscreen);
+	void SetResizable(bool resizable);
 public:
 	//The window we'll be rendering to
 	SDL_Window* window;

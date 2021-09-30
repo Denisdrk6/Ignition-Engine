@@ -21,8 +21,7 @@
 #include <stdio.h>
 #include <list>
 
-#include "MathGeoLib.h"
-
+#include  "MathGeoLib/MathGeoLib.h"
 class Application
 {
 public:

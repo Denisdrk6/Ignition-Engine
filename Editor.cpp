@@ -128,7 +128,38 @@ update_status Editor::Update(float dt)
 
 			ImGui::TreePop();
 		}
+		if (ImGui::TreeNode("Window"))
+		{
+			ImGui::SliderInt("Brightness",&bright,minBright,maxBright);//Brightness
+			if (ImGui::SliderInt("Width", &width, minWidth, maxWidth))//Width
+				App->renderer3D->OnResize(width, height);
+			if(ImGui::SliderInt("Height",&height,minHeight,maxHeight))//Height
+				App->renderer3D->OnResize(width, height);
 
+			
+			if (ImGui::Checkbox("Fullscreen Desktop", &fullscreenDesk))
+			{
+				App->window->SetFullscreenDesk(fullscreenDesk);
+				fullscreen = false;
+			}
+			ImGui::SameLine();
+			if (ImGui::Checkbox("Fullscreen", &fullscreen))
+			{
+				App->window->SetFullscreen(fullscreen);
+				fullscreenDesk = false;
+			}
+
+			if (ImGui::Checkbox("Resizable", &resizable))
+				App->window->SetResizable(resizable);
+			ImGui::TreePop();
+		}
+		if (ImGui::TreeNode("Hardware"))
+		{
+
+
+
+			ImGui::TreePop();
+		}
 		ImGui::End();
 	}
 	
