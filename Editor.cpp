@@ -32,6 +32,11 @@ bool Editor::Start()
 		return -1;
 	}
 
+	SDL_DisplayMode DM;
+	SDL_GetCurrentDisplayMode(0, &DM);
+	maxWidth = DM.w;
+	maxHeight = DM.h;
+
 	return ret;
 }
 
@@ -113,11 +118,19 @@ update_status Editor::Update(float dt)
 		ImGui::Begin("Configuration", &config);
 		ImGui::Text("Options");
 
-		if (ImGui::TreeNode("Application"))
+		if (ImGui::TreeNode("Application")) // App configuration
 		{
-			ImGui::LabelText("App name", TITLE);
-			ImGui::LabelText("Organization", "CITM students");
+
+			static char appTitle[64] = "Ignition Engine";
+			ImGui::InputText("App name", appTitle, IM_ARRAYSIZE(appTitle));
+
+			static char orgName[64] = "CITM students";
+			ImGui::InputText("Organization", orgName, IM_ARRAYSIZE(appTitle));
+
 			ImGui::SliderInt("Max FPS", &App->maxFPS, 1, 60);
+			std::string str = "Fps Limit: " + std::to_string(App->maxFPS);
+			ImGui::Text(str.c_str());
+			//ImGui::LabelText(str.c_str(), "CITM students");
 
 			char title[25];
 			sprintf_s(title, 25, "Framerate %.1f", App->fps_log[App->fps_log.size() - 1]);
@@ -128,29 +141,41 @@ update_status Editor::Update(float dt)
 
 			ImGui::TreePop();
 		}
-		if (ImGui::TreeNode("Window"))
+
+		if (ImGui::TreeNode("Window")) // Window configuration
 		{
-			ImGui::SliderInt("Brightness",&bright,minBright,maxBright);//Brightness
-			if (ImGui::SliderInt("Width", &width, minWidth, maxWidth))//Width
-				App->renderer3D->OnResize(width, height);
-			if(ImGui::SliderInt("Height",&height,minHeight,maxHeight))//Height
-				App->renderer3D->OnResize(width, height);
+			if (ImGui::SliderFloat("Brightness", &brightness, 0.1f, 1.0f)) // Brightness
+				App->window->SetBrightness(brightness);
+
+			if (!fullscreen && !fullscreenDesk) // Sliders won't work if we are on fullscreen mode
+			{
+				if (ImGui::SliderInt("Width", &width, 340, maxWidth)) // Width
+					App->window->SetSize(width, height);
+
+				if (ImGui::SliderInt("Height", &height, 540, maxHeight)) // Height
+					App->window->SetSize(width, height);
+			}
 
 			
-			if (ImGui::Checkbox("Fullscreen Desktop", &fullscreenDesk))
+			if (ImGui::Checkbox("Fullscreen Desktop", &fullscreenDesk)) // Fullscreen desktop
 			{
 				App->window->SetFullscreenDesk(fullscreenDesk);
 				fullscreen = false;
 			}
+
 			ImGui::SameLine();
-			if (ImGui::Checkbox("Fullscreen", &fullscreen))
+			if (ImGui::Checkbox("Fullscreen", &fullscreen)) // Fullscreen
 			{
 				App->window->SetFullscreen(fullscreen);
 				fullscreenDesk = false;
 			}
 
-			if (ImGui::Checkbox("Resizable", &resizable))
+			if (ImGui::Checkbox("Resizable", &resizable)) // Window is resizable
 				App->window->SetResizable(resizable);
+
+			if (ImGui::IsItemHovered())
+				ImGui::SetTooltip("Restart to apply");
+
 			ImGui::TreePop();
 		}
 		if (ImGui::TreeNode("Hardware"))

@@ -39,18 +39,19 @@ public:
 	
 private:
 	Tab* about;
+
+	// Window options
 	bool fullscreen = false;
 	bool fullscreenDesk = false;
 	bool resizable=true;
-	int bright=100;
-	int minBright=10;
-	int maxBright=100;
+
+	// Sliders data
+	float brightness=1.0f;
 	int width=1280;
-	int minWidth=340;
 	int maxWidth=1500;
 	int height=1024;
-	int minHeight=540;
 	int maxHeight=1500;
+
 	// Our state
 	bool toolMenu = false;
 	bool showcaseDemo = false;

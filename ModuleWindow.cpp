@@ -19,6 +19,8 @@ bool ModuleWindow::Init()
 	MYLOG("Init SDL window & surface");
 	bool ret = true;
 
+	//title = "Ignition Engine";
+
 	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 	SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
 	SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
@@ -66,10 +68,12 @@ void ModuleWindow::SetTitle(const char* title)
 {
 	SDL_SetWindowTitle(window, title);
 }
+
 void ModuleWindow::SetFullscreen(bool fullscreen)
 {
 	SDL_SetWindowFullscreen(window, fullscreen ? SDL_WINDOW_FULLSCREEN : 0);
 }
+
 void ModuleWindow::SetFullscreenDesk(bool fullscreenDesk)
 {
 	SDL_SetWindowFullscreen(window, fullscreenDesk ? SDL_WINDOW_FULLSCREEN_DESKTOP : 0);
@@ -77,5 +81,15 @@ void ModuleWindow::SetFullscreenDesk(bool fullscreenDesk)
 
 void ModuleWindow::SetResizable(bool resizable)
 {
+	
+}
 
+void ModuleWindow::SetSize(int w, int h)
+{
+	SDL_SetWindowSize(window, w, h);
+}
+
+void ModuleWindow::SetBrightness(float brightness)
+{
+	SDL_SetWindowBrightness(window, brightness);
 }
