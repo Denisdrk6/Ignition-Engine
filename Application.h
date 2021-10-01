@@ -40,6 +40,13 @@ public:
 
 	int maxFPS = 60.0f;
 
+	// Hardware info
+	int cpuCount = 0;
+	int cpuCacheSize = 0;
+	float ram = 0.0f;
+	SDL_version ver;
+	std::string caps = "";
+
 private:
 	
 	Timer	ms_timer;

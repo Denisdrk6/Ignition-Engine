@@ -32,6 +32,7 @@ bool Editor::Start()
 		return -1;
 	}
 
+
 	SDL_DisplayMode DM;
 	SDL_GetCurrentDisplayMode(0, &DM);
 	maxWidth = DM.w;
@@ -128,8 +129,13 @@ update_status Editor::Update(float dt)
 			ImGui::InputText("Organization", orgName, IM_ARRAYSIZE(appTitle));
 
 			ImGui::SliderInt("Max FPS", &App->maxFPS, 1, 60);
-			std::string str = "Fps Limit: " + std::to_string(App->maxFPS);
-			ImGui::Text(str.c_str());
+			std::string str = std::to_string(App->maxFPS);
+			ImGui::Text("Fps Limit: ");
+			ImGui::SameLine();
+			ImGui::PushStyleColor(ImGuiCol_Text, ImVec4{ 0.15f, 0.96f, 0.69f, 0.8f });
+			ImGui::Text("%d.%d.%d", App->ver.major, App->ver.minor, App->ver.patch);
+			ImGui::PopStyleColor();
+
 			//ImGui::LabelText(str.c_str(), "CITM students");
 
 			char title[25];
@@ -149,20 +155,19 @@ update_status Editor::Update(float dt)
 
 			if (!fullscreen && !fullscreenDesk) // Sliders won't work if we are on fullscreen mode
 			{
-				if (ImGui::SliderInt("Width", &width, 340, maxWidth)) // Width
-					App->window->SetSize(width, height);
+				if (ImGui::SliderInt("Width", &width, 500, maxWidth)) // Width 
+					App->window->SetSize(width, height); // Quizá se deberia cambiar el viewport de opengl para que no se deforme
 
 				if (ImGui::SliderInt("Height", &height, 540, maxHeight)) // Height
 					App->window->SetSize(width, height);
 			}
-
 			
 			if (ImGui::Checkbox("Fullscreen Desktop", &fullscreenDesk)) // Fullscreen desktop
 			{
 				App->window->SetFullscreenDesk(fullscreenDesk);
 				fullscreen = false;
 			}
-
+			
 			ImGui::SameLine();
 			if (ImGui::Checkbox("Fullscreen", &fullscreen)) // Fullscreen
 			{
@@ -180,7 +185,31 @@ update_status Editor::Update(float dt)
 		}
 		if (ImGui::TreeNode("Hardware"))
 		{
+			ImGui::Text("SDL Version: ");
+			ImGui::SameLine();
+			ImGui::PushStyleColor(ImGuiCol_Text, ImVec4{ 0.15f, 0.96f, 0.69f, 0.8f });
+			ImGui::Text("%d.%d.%d", App->ver.major, App->ver.minor, App->ver.patch);
+			ImGui::PopStyleColor();
 
+			ImGui::Separator();
+
+			ImGui::Text("CPUs: ");
+			ImGui::SameLine();
+			ImGui::PushStyleColor(ImGuiCol_Text, ImVec4{ 0.15f, 0.96f, 0.69f, 0.8f });
+			ImGui::Text("%d (Cache: %dkb)", App->cpuCount, App->cpuCacheSize);
+			ImGui::PopStyleColor();
+
+			ImGui::Text("System RAM: ");
+			ImGui::SameLine();
+			ImGui::PushStyleColor(ImGuiCol_Text, ImVec4{ 0.15f, 0.96f, 0.69f, 0.8f });
+			ImGui::Text("%.1fGb", App->ram);
+			ImGui::PopStyleColor();
+
+			ImGui::Text("Caps: ");
+			ImGui::SameLine();
+			ImGui::PushStyleColor(ImGuiCol_Text, ImVec4{ 0.15f, 0.96f, 0.69f, 0.8f });
+			ImGui::Text(App->caps.c_str());
+			ImGui::PopStyleColor();
 
 
 			ImGui::TreePop();

@@ -76,6 +76,34 @@ bool Application::Init()
 	}
 	
 	ms_timer.Start();
+
+	SDL_GetVersion(&ver);
+	cpuCount = SDL_GetCPUCount();
+	cpuCacheSize = SDL_GetCPUCacheLineSize();
+	ram = SDL_GetSystemRAM() / 1000;
+
+	if (SDL_HasAVX())
+		caps += "AVX, ";
+	if (SDL_HasAVX2())
+		caps += "AVX2, ";
+	if (SDL_HasMMX())
+		caps += "MMX, ";
+	if (SDL_HasRDTSC())
+		caps += "RDTSC, ";
+	if (SDL_HasSSE())
+		caps += "SSE, ";
+	if (SDL_HasSSE2())
+		caps += "SSE2, ";
+	if (SDL_HasSSE3())
+		caps += "SSE3, ";
+	if (SDL_HasSSE41())
+		caps += "SSE41, ";
+	if (SDL_HasSSE42())
+		caps += "SSE42, ";
+
+	int l = caps.size();
+	caps.erase(l - 1, l);
+
 	return ret;
 }
 

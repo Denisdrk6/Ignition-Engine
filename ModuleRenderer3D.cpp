@@ -25,6 +25,8 @@ bool ModuleRenderer3D::Init()
 	gl_context = SDL_GL_CreateContext(App->window->window);
 	SDL_GL_MakeCurrent(App->window->window, gl_context);
 	SDL_GL_SetSwapInterval(1); // Enable vsync
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1);
 
 	// Setup Dear ImGui context
 	IMGUI_CHECKVERSION();
