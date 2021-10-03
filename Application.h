@@ -22,6 +22,11 @@
 #include <list>
 
 #include  "MathGeoLib/MathGeoLib.h"
+
+#include "PugiXml/src/pugixml.hpp"
+
+#define CONFIG_FILNAME "config.xml"
+
 class Application
 {
 public:
@@ -35,10 +40,12 @@ public:
 	
 	SDL_GLContext gl_context;
 
+	// App info
 	std::vector<float> fps_log;
 	std::vector<float> ms_log;
-
-	int maxFPS = 60.0f;
+	int maxFPS = 60;
+	std::string appTitle = "Ignition engine";
+	std::string orgName = "CITM Students";
 
 	// Hardware info
 	int cpuCount = 0;
@@ -46,6 +53,12 @@ public:
 	float ram = 0.0f;
 	SDL_version ver;
 	std::string caps = "";
+	std::string gpuIntegratedVendor = "";
+	std::string gpuIntegratedModel = "";
+	float VramTotal = 0.0f;
+	float VramAvailable = 0.0f;
+	float VramUsage = 0.0f;
+	float VramReserved = 0.0f;
 
 private:
 	
@@ -73,4 +86,11 @@ private:
 	void AddModule(Module* mod);
 	void PrepareUpdate();
 	void FinishUpdate();
+
+	// Load/Save config file
+	bool LoadConfig();
+	bool SaveConfig();
+
+	pugi::xml_document configFile;
+	pugi::xml_node config;
 };

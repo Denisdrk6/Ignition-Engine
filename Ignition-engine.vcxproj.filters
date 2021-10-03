@@ -61,6 +61,9 @@
     <ClCompile Include="imgui\imgui_widgets.cpp">
       <Filter>imgui</Filter>
     </ClCompile>
+    <ClCompile Include="PugiXml\src\pugixml.cpp">
+      <Filter>PugiXml</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
@@ -128,6 +131,12 @@
     <ClInclude Include="imgui\imstb_truetype.h">
       <Filter>imgui</Filter>
     </ClInclude>
+    <ClInclude Include="PugiXml\src\pugiconfig.hpp">
+      <Filter>PugiXml</Filter>
+    </ClInclude>
+    <ClInclude Include="PugiXml\src\pugixml.hpp">
+      <Filter>PugiXml</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="imgui">
@@ -138,6 +147,9 @@
     </Filter>
     <Filter Include="Helplers">
       <UniqueIdentifier>{fe9fe8c8-37b8-4b9c-9a2c-586e70e49a20}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PugiXml">
+      <UniqueIdentifier>{1a6dd6d6-1e35-4ed6-a91d-1caf38943029}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

@@ -1,6 +1,7 @@
 #include "Globals.h"
 #include "Application.h"
 #include "ModuleWindow.h"
+#include "Editor.h"
 
 ModuleWindow::ModuleWindow(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
@@ -19,15 +20,23 @@ bool ModuleWindow::Init()
 	MYLOG("Init SDL window & surface");
 	bool ret = true;
 
-	//title = "Ignition Engine";
+	title = App->appTitle + " - " + App->orgName;
 
 	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 	SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
 	SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 2);
-	SDL_WindowFlags window_flags = (SDL_WindowFlags)(SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI);
-	window = SDL_CreateWindow("Dear ImGui SDL2+OpenGL example", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1280, 720, window_flags);
+	SDL_WindowFlags window_flags = (SDL_WindowFlags)(SDL_WINDOW_OPENGL | SDL_WINDOW_ALLOW_HIGHDPI);
+
+	// Config file stuff
+	if (App->editor->resizable) window_flags = (SDL_WindowFlags)(window_flags | SDL_WINDOW_RESIZABLE);
+	if (App->editor->borderless) window_flags = (SDL_WindowFlags)(window_flags | SDL_WINDOW_BORDERLESS);
+
+	window = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, App->editor->width, App->editor->height, window_flags);
+	
+	// More config file stuff
+	SDL_SetWindowBrightness(window, App->editor->brightness);
 
 	return ret;
 }
@@ -64,9 +73,10 @@ bool ModuleWindow::CleanUp()
 	return true;
 }
 
-void ModuleWindow::SetTitle(const char* title)
+void ModuleWindow::SetTitle()
 {
-	SDL_SetWindowTitle(window, title);
+	title = App->appTitle + " - " + App->orgName;
+	SDL_SetWindowTitle(window, title.c_str());
 }
 
 void ModuleWindow::SetFullscreen(bool fullscreen)
@@ -79,9 +89,9 @@ void ModuleWindow::SetFullscreenDesk(bool fullscreenDesk)
 	SDL_SetWindowFullscreen(window, fullscreenDesk ? SDL_WINDOW_FULLSCREEN_DESKTOP : 0);
 }
 
-void ModuleWindow::SetResizable(bool resizable)
+void ModuleWindow::SetBorder(bool borderless)
 {
-	
+	SDL_SetWindowBordered(window, (SDL_bool)borderless);
 }
 
 void ModuleWindow::SetSize(int w, int h)

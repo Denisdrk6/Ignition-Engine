@@ -1,4 +1,6 @@
 #include "Application.h"
+#include <iostream>
+#include <fstream>
 
 Application::Application()
 {
@@ -14,6 +16,8 @@ Application::Application()
 	// Modules will Init() Start() and Update in this order
 	// They will CleanUp() in reverse order
 
+	AddModule(editor); // The first one so we can load variables from Json file
+
 	// Main Modules
 	AddModule(window);
 	AddModule(camera);
@@ -22,7 +26,6 @@ Application::Application()
 	
 	// Scenes
 	AddModule(scene_intro);
-	AddModule(editor);
 
 	// Renderer last!
 	AddModule(renderer3D);
@@ -52,6 +55,12 @@ Application::~Application()
 bool Application::Init()
 {
 	bool ret = true;
+
+
+	std::ifstream fin;
+	fin.open(CONFIG_FILNAME, std::ios::binary);
+	if (!fin.fail()) LoadConfig();
+	else SaveConfig();
 
 	// Call Init() in all modules
 	std::list<Module*>::iterator iterator = list_modules.begin();
@@ -101,8 +110,22 @@ bool Application::Init()
 	if (SDL_HasSSE42())
 		caps += "SSE42, ";
 
+	// Erase last ", "
 	int l = caps.size();
 	caps.erase(l - 1, l);
+
+	gpuIntegratedVendor = (const char*)glGetString(GL_VENDOR);
+	gpuIntegratedModel = (const char*)glGetString(GL_RENDERER);
+
+	/*GLint totalMemory = 0;
+	glGetIntegerv(GL_GPU_MEMORY_INFO_TOTAL_AVAILABLE_MEMORY_NVX,
+		&totalMemory);
+	VramTotal = totalMemory / 1000.0f;
+
+	GLint availableMemory = 0;
+	glGetIntegerv(GL_GPU_MEMORY_INFO_CURRENT_AVAILABLE_VIDMEM_NVX,
+		&availableMemory);
+	VramAvailable = availableMemory / 1000.0f;*/
 
 	return ret;
 }
@@ -180,6 +203,9 @@ update_status Application::Update()
 bool Application::CleanUp()
 {
 	bool ret = true;
+
+	SaveConfig(); // We should call it only if there's been changes
+
 	std::list<Module*>::iterator iterator = list_modules.end();
 	iterator--;
 	Module* item;
@@ -206,4 +232,79 @@ void Application::AddModule(Module* mod)
 void Application::RequestBrowser(const char* link)
 {
 	ShellExecute(NULL, "open", link, NULL, NULL, SW_SHOWNORMAL);
+}
+
+// Load config from XML file
+bool Application::LoadConfig()
+{
+	bool ret = true;
+
+	// TODO 3: Load config.xml file using load_file() method from the xml_document class
+	pugi::xml_parse_result result = configFile.load_file(CONFIG_FILNAME);
+
+	// TODO 3: Check result for loading errors
+	if (result == NULL)
+	{
+		MYLOG("Could not load config xml file. pugi error: %s", result.description());
+		ret = false;
+	}
+	else
+	{
+		MYLOG("Loading configuration");
+
+		config = configFile.child("config");
+
+		// Load app config
+		pugi::xml_node app = config.child("App");
+		appTitle = app.attribute("name").as_string();
+		orgName = app.attribute("org").as_string();
+		maxFPS = app.attribute("maxFPS").as_int();
+
+		// Load window config
+		pugi::xml_node window = config.child("Window");
+		editor->width = window.attribute("w").as_int();
+		editor->height = window.attribute("h").as_int();
+		editor->brightness = window.attribute("brightness").as_float();
+		editor->fullscreen = window.attribute("fullscreen").as_bool();
+		editor->fullscreenDesk = window.attribute("fulldesk").as_bool();
+		editor->resizable = window.attribute("resizable").as_bool();
+		editor->borderless = window.attribute("borderless").as_bool();
+	}
+
+	return ret;
+}
+
+bool Application::SaveConfig()
+{
+	bool ret = true;
+
+	MYLOG("Saving configuration in %s", CONFIG_FILNAME);
+
+	pugi::xml_document file;
+	pugi::xml_node base = file.append_child("config");
+
+	// App save
+	pugi::xml_node app = base.append_child("App");
+	app.append_attribute("name") = appTitle.c_str();
+	app.append_attribute("org") = orgName.c_str();
+	app.append_attribute("maxFPS") = maxFPS;
+
+	// Window save
+	pugi::xml_node window = base.append_child("Window");
+	window.append_attribute("w") = editor->width;
+	window.append_attribute("h") = editor->height;
+	window.append_attribute("brightness") = editor->brightness;
+	window.append_attribute("fullscreen") = editor->fullscreen;
+	window.append_attribute("fulldesk") = editor->fullscreenDesk;
+	window.append_attribute("resizable") = editor->resizable;
+	window.append_attribute("borderless") = editor->borderless;
+
+	bool succ = file.save_file(CONFIG_FILNAME);
+	if (succ != true)
+	{
+		MYLOG("Config file save error. pugi error: %d", pugi::status_internal_error);
+	}
+	else MYLOG("... finished saving");
+
+	return ret;
 }

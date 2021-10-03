@@ -118,15 +118,27 @@ update_status Editor::Update(float dt)
 	{
 		ImGui::Begin("Configuration", &config);
 		ImGui::Text("Options");
+		ImGuiTreeNodeFlags(ImGuiTreeNodeFlags_Framed);
+		
 
-		if (ImGui::TreeNode("Application")) // App configuration
+		if (ImGui::CollapsingHeader("Application")) // App configuration
 		{
-
-			static char appTitle[64] = "Ignition Engine";
+			std::strcpy(appTitle, App->appTitle.c_str());
 			ImGui::InputText("App name", appTitle, IM_ARRAYSIZE(appTitle));
+			if (App->appTitle != (std::string)appTitle)
+			{
+				App->appTitle = appTitle;
+				App->window->SetTitle();
+			}
 
-			static char orgName[64] = "CITM students";
-			ImGui::InputText("Organization", orgName, IM_ARRAYSIZE(appTitle));
+
+			std::strcpy(orgName, App->orgName.c_str());
+			ImGui::InputText("Organization", orgName, IM_ARRAYSIZE(orgName));
+			if (App->orgName != (std::string)orgName)
+			{
+				App->orgName = (const char*)orgName;
+				App->window->SetTitle();
+			}
 
 			ImGui::SliderInt("Max FPS", &App->maxFPS, 1, 60);
 			std::string str = std::to_string(App->maxFPS);
@@ -144,11 +156,9 @@ update_status Editor::Update(float dt)
 
 			sprintf_s(title, 25, "Miliseconds %.1f", App->ms_log[App->ms_log.size() - 1]);
 			ImGui::PlotHistogram("##MILISECONDS", &App->ms_log[0], App->ms_log.size(), 0, title, 0.0f, 40.0f, ImVec2(310, 100));
-
-			ImGui::TreePop();
 		}
 
-		if (ImGui::TreeNode("Window")) // Window configuration
+		if (ImGui::CollapsingHeader("Window")) // Window configuration
 		{
 			if (ImGui::SliderFloat("Brightness", &brightness, 0.1f, 1.0f)) // Brightness
 				App->window->SetBrightness(brightness);
@@ -162,28 +172,48 @@ update_status Editor::Update(float dt)
 					App->window->SetSize(width, height);
 			}
 			
-			if (ImGui::Checkbox("Fullscreen Desktop", &fullscreenDesk)) // Fullscreen desktop
-			{
-				App->window->SetFullscreenDesk(fullscreenDesk);
-				fullscreen = false;
-			}
-			
-			ImGui::SameLine();
 			if (ImGui::Checkbox("Fullscreen", &fullscreen)) // Fullscreen
 			{
 				App->window->SetFullscreen(fullscreen);
 				fullscreenDesk = false;
 			}
 
-			if (ImGui::Checkbox("Resizable", &resizable)) // Window is resizable
-				App->window->SetResizable(resizable);
+			ImGui::SameLine();
+			if (ImGui::Checkbox("Full Desktop", &fullscreenDesk)) // Fullscreen desktop
+			{
+				App->window->SetFullscreenDesk(fullscreenDesk);
+				fullscreen = false;
+			}
+
+			if (ImGui::Checkbox("Borderless", &borderless)) // Window is borderless
+			{
+				App->window->SetBorder(!borderless); // We send negated bool because SDL_SetWindowBordered takes true as putting borders
+			}
+
+			ImGui::SameLine();
+			ImGui::Checkbox("Resizable", &resizable); // Window is resizable
 
 			if (ImGui::IsItemHovered())
 				ImGui::SetTooltip("Restart to apply");
-
-			ImGui::TreePop();
 		}
-		if (ImGui::TreeNode("Hardware"))
+
+		if (ImGui::CollapsingHeader("Renderer"))
+		{
+		}
+
+		if (ImGui::CollapsingHeader("Input"))
+		{
+		}
+
+		if (ImGui::CollapsingHeader("Audio"))
+		{
+		}
+
+		if (ImGui::CollapsingHeader("Camera"))
+		{
+		}
+
+		if (ImGui::CollapsingHeader("Hardware"))
 		{
 			ImGui::Text("SDL Version: ");
 			ImGui::SameLine();
@@ -202,17 +232,65 @@ update_status Editor::Update(float dt)
 			ImGui::Text("System RAM: ");
 			ImGui::SameLine();
 			ImGui::PushStyleColor(ImGuiCol_Text, ImVec4{ 0.15f, 0.96f, 0.69f, 0.8f });
-			ImGui::Text("%.1fGb", App->ram);
+			ImGui::Text("%.1f Gb", App->ram);
 			ImGui::PopStyleColor();
 
 			ImGui::Text("Caps: ");
 			ImGui::SameLine();
 			ImGui::PushStyleColor(ImGuiCol_Text, ImVec4{ 0.15f, 0.96f, 0.69f, 0.8f });
-			ImGui::Text(App->caps.c_str());
+			ImGui::TextWrapped(App->caps.c_str());
+			//ImGui::Text(App->caps.c_str());
 			ImGui::PopStyleColor();
 
+			ImGui::Separator();
 
-			ImGui::TreePop();
+			ImGui::Text("Integrated GPU: ");
+			ImGui::SameLine();
+			ImGui::PushStyleColor(ImGuiCol_Text, ImVec4{ 0.15f, 0.96f, 0.69f, 0.8f });
+			ImGui::Text(App->gpuIntegratedModel.c_str());
+			ImGui::PopStyleColor();
+
+			ImGui::Text("Vendor: ");
+			ImGui::SameLine();
+			ImGui::PushStyleColor(ImGuiCol_Text, ImVec4{ 0.15f, 0.96f, 0.69f, 0.8f });
+			ImGui::Text(App->gpuIntegratedVendor.c_str());
+			ImGui::PopStyleColor();
+
+			ImGui::Text("GPU: ");
+			ImGui::SameLine();
+			ImGui::PushStyleColor(ImGuiCol_Text, ImVec4{ 0.15f, 0.96f, 0.69f, 0.8f });
+			ImGui::Text("Undetectable with OpenGL2.0");
+			ImGui::PopStyleColor();
+
+			ImGui::Text("Vendor: ");
+			ImGui::SameLine();
+			ImGui::PushStyleColor(ImGuiCol_Text, ImVec4{ 0.15f, 0.96f, 0.69f, 0.8f });
+			ImGui::Text("Undetectable with OpenGL2.0");
+			ImGui::PopStyleColor();
+
+			ImGui::Text("Vram Budget: ");
+			ImGui::SameLine();
+			ImGui::PushStyleColor(ImGuiCol_Text, ImVec4{ 0.15f, 0.96f, 0.69f, 0.8f });
+			ImGui::Text("%.1f Mb", App->VramTotal);
+			ImGui::PopStyleColor();
+
+			ImGui::Text("Vram Usage: ");
+			ImGui::SameLine();
+			ImGui::PushStyleColor(ImGuiCol_Text, ImVec4{ 0.15f, 0.96f, 0.69f, 0.8f });
+			ImGui::Text("%.1f Mb", App->VramUsage);
+			ImGui::PopStyleColor();
+
+			ImGui::Text("Vram Available: ");
+			ImGui::SameLine();
+			ImGui::PushStyleColor(ImGuiCol_Text, ImVec4{ 0.15f, 0.96f, 0.69f, 0.8f });
+			ImGui::Text("%.1f Mb", App->VramAvailable);
+			ImGui::PopStyleColor();
+
+			ImGui::Text("Vram Rreserved: ");
+			ImGui::SameLine();
+			ImGui::PushStyleColor(ImGuiCol_Text, ImVec4{ 0.15f, 0.96f, 0.69f, 0.8f });
+			ImGui::Text("%.1f Mb", App->VramReserved);
+			ImGui::PopStyleColor();
 		}
 		ImGui::End();
 	}

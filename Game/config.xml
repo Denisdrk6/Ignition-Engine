@@ -1,0 +1,5 @@
+<?xml version="1.0"?>
+<config>
+	<App name="Ignition engine" org="CITM Students" maxFPS="60" />
+	<Window w="532" h="991" brightness="1" fullscreen="false" fulldesk="false" resizable="true" borderless="false" />
+</config>

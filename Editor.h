@@ -36,21 +36,26 @@ public:
 	update_status Update(float dt);
 	bool CleanUp();
 
+	// VARIABLES ARE PUBLIC SO WINDOW MODULE CAN ACCESESS THEM
+	// App config
+	char appTitle[64];
+	char orgName[64];
+
+	// Window options declared here so we don't have to call window module each frame
+	bool fullscreen = false;
+	bool fullscreenDesk = false;
+	bool resizable = false;
+	bool borderless = false;
+
+	// Sliders data
+	float brightness = 1.0f;
+	int width = 1280;
+	int maxWidth = 1500;
+	int height = 1024;
+	int maxHeight = 1500;
 	
 private:
 	Tab* about;
-
-	// Window options
-	bool fullscreen = false;
-	bool fullscreenDesk = false;
-	bool resizable=true;
-
-	// Sliders data
-	float brightness=1.0f;
-	int width=1280;
-	int maxWidth=1500;
-	int height=1024;
-	int maxHeight=1500;
 
 	// Our state
 	bool toolMenu = false;
