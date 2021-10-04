@@ -55,10 +55,6 @@ public:
 	std::string caps = "";
 	std::string gpuIntegratedVendor = "";
 	std::string gpuIntegratedModel = "";
-	float VramTotal = 0.0f;
-	float VramAvailable = 0.0f;
-	float VramUsage = 0.0f;
-	float VramReserved = 0.0f;
 
 private:
 	

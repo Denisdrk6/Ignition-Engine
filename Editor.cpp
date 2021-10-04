@@ -4,7 +4,7 @@
 
 Editor::Editor(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
-	about = new Tab(true);
+	//about = new Tab(true);
 }
 
 // Destructor
@@ -35,8 +35,8 @@ bool Editor::Start()
 
 	SDL_DisplayMode DM;
 	SDL_GetCurrentDisplayMode(0, &DM);
-	maxWidth = DM.w;
-	maxHeight = DM.h;
+	App->window->maxWidth = DM.w;
+	App->window->maxHeight = DM.h;
 
 	return ret;
 }
@@ -70,7 +70,36 @@ update_status Editor::Update(float dt)
 
 			if (ImGui::MenuItem("Report a bug")) App->RequestBrowser("https://github.com/d0n3val/Edu-Game-Engine/issues");
 
-			if (ImGui::MenuItem("About")) about->SwitchActive();
+			ImGui::MenuItem("About");
+
+			if(ImGui::IsItemHovered())
+				ImGui::OpenPopup("About");
+
+			ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{ 0.0f , 0.0f , 0.0f , 0.0f });
+
+			if (ImGui::BeginPopup("About"))
+			{
+				ImGui::Text("Ignition Engine V0.1");
+				ImGui::Text("The next-gen 3D game engine.");
+				ImGui::Text("By");
+				ImGui::SameLine();
+				if (ImGui::Button("Denis Deconinck")) App->RequestBrowser("https://github.com/Denisdrk6");
+				ImGui::SameLine();
+				ImGui::Text("&");
+				ImGui::SameLine();
+				if (ImGui::Button("Pol Pallares")) App->RequestBrowser("https://github.com/Zeta115");
+
+				ImGui::Text("3rd Party Libraries Used:");
+				ImGui::BulletText("SDL2");
+				ImGui::BulletText("OpenGL 2.0");
+				ImGui::BulletText("ImGui");
+				ImGui::BulletText("MathGeoLib");
+				ImGui::BulletText("PugiXML");
+
+				ImGui::EndPopup();
+			}
+
+			ImGui::PopStyleColor();
 
 			ImGui::EndMenu();
 		}
@@ -145,7 +174,7 @@ update_status Editor::Update(float dt)
 			ImGui::Text("Fps Limit: ");
 			ImGui::SameLine();
 			ImGui::PushStyleColor(ImGuiCol_Text, ImVec4{ 0.15f, 0.96f, 0.69f, 0.8f });
-			ImGui::Text("%d.%d.%d", App->ver.major, App->ver.minor, App->ver.patch);
+			ImGui::Text("%d", App->maxFPS);
 			ImGui::PopStyleColor();
 
 			//ImGui::LabelText(str.c_str(), "CITM students");
@@ -160,38 +189,38 @@ update_status Editor::Update(float dt)
 
 		if (ImGui::CollapsingHeader("Window")) // Window configuration
 		{
-			if (ImGui::SliderFloat("Brightness", &brightness, 0.1f, 1.0f)) // Brightness
-				App->window->SetBrightness(brightness);
+			if (ImGui::SliderFloat("Brightness", &App->window->brightness, 0.1f, 1.0f)) // Brightness
+				App->window->SetBrightness(App->window->brightness);
 
-			if (!fullscreen && !fullscreenDesk) // Sliders won't work if we are on fullscreen mode
+			if (!App->window->fullscreen && !App->window->fullscreenDesk) // Sliders won't work if we are on fullscreen mode
 			{
-				if (ImGui::SliderInt("Width", &width, 500, maxWidth)) // Width 
-					App->window->SetSize(width, height); // Quizá se deberia cambiar el viewport de opengl para que no se deforme
+				if (ImGui::SliderInt("Width", &App->window->width, 500, App->window->maxWidth)) // Width 
+					App->window->SetSize(App->window->width, App->window->height); // Quizá se deberia cambiar el viewport de opengl para que no se deforme
 
-				if (ImGui::SliderInt("Height", &height, 540, maxHeight)) // Height
-					App->window->SetSize(width, height);
+				if (ImGui::SliderInt("Height", &App->window->height, 540, App->window->maxHeight)) // Height
+					App->window->SetSize(App->window->width, App->window->height);
 			}
 			
-			if (ImGui::Checkbox("Fullscreen", &fullscreen)) // Fullscreen
+			if (ImGui::Checkbox("Fullscreen", &App->window->fullscreen)) // Fullscreen
 			{
-				App->window->SetFullscreen(fullscreen);
-				fullscreenDesk = false;
+				App->window->SetFullscreen(App->window->fullscreen);
+				App->window->fullscreenDesk = false;
 			}
 
 			ImGui::SameLine();
-			if (ImGui::Checkbox("Full Desktop", &fullscreenDesk)) // Fullscreen desktop
+			if (ImGui::Checkbox("Full Desktop", &App->window->fullscreenDesk)) // Fullscreen desktop
 			{
-				App->window->SetFullscreenDesk(fullscreenDesk);
-				fullscreen = false;
+				App->window->SetFullscreenDesk(App->window->fullscreenDesk);
+				App->window->fullscreen = false;
 			}
 
-			if (ImGui::Checkbox("Borderless", &borderless)) // Window is borderless
+			if (ImGui::Checkbox("Borderless", &App->window->borderless)) // Window is borderless
 			{
-				App->window->SetBorder(!borderless); // We send negated bool because SDL_SetWindowBordered takes true as putting borders
+				App->window->SetBorder(!App->window->borderless); // We send negated bool because SDL_SetWindowBordered takes true as putting borders
 			}
 
 			ImGui::SameLine();
-			ImGui::Checkbox("Resizable", &resizable); // Window is resizable
+			ImGui::Checkbox("Resizable", &App->window->resizable); // Window is resizable
 
 			if (ImGui::IsItemHovered())
 				ImGui::SetTooltip("Restart to apply");
@@ -199,10 +228,25 @@ update_status Editor::Update(float dt)
 
 		if (ImGui::CollapsingHeader("Renderer"))
 		{
+			ImGui::Checkbox("Vsync", &App->renderer3D->vsync);
+
+			if (ImGui::IsItemHovered())
+				ImGui::SetTooltip("Restart to apply");
 		}
 
 		if (ImGui::CollapsingHeader("Input"))
 		{
+			ImGui::Text("Mouse position: ");
+			ImGui::SameLine();
+			ImGui::PushStyleColor(ImGuiCol_Text, ImVec4{ 0.15f, 0.96f, 0.69f, 0.8f });
+			ImGui::Text("(%d, %d)", App->input->GetMouseX(), App->input->GetMouseY());
+			ImGui::PopStyleColor();
+
+			ImGui::Text("Mouse wheel motion: ");
+			ImGui::SameLine();
+			ImGui::PushStyleColor(ImGuiCol_Text, ImVec4{ 0.15f, 0.96f, 0.69f, 0.8f });
+			ImGui::Text("%d", App->input->GetMouseZ());
+			ImGui::PopStyleColor();
 		}
 
 		if (ImGui::CollapsingHeader("Audio"))
@@ -244,7 +288,7 @@ update_status Editor::Update(float dt)
 
 			ImGui::Separator();
 
-			ImGui::Text("Integrated GPU: ");
+			ImGui::Text("GPU: ");
 			ImGui::SameLine();
 			ImGui::PushStyleColor(ImGuiCol_Text, ImVec4{ 0.15f, 0.96f, 0.69f, 0.8f });
 			ImGui::Text(App->gpuIntegratedModel.c_str());
@@ -254,42 +298,6 @@ update_status Editor::Update(float dt)
 			ImGui::SameLine();
 			ImGui::PushStyleColor(ImGuiCol_Text, ImVec4{ 0.15f, 0.96f, 0.69f, 0.8f });
 			ImGui::Text(App->gpuIntegratedVendor.c_str());
-			ImGui::PopStyleColor();
-
-			ImGui::Text("GPU: ");
-			ImGui::SameLine();
-			ImGui::PushStyleColor(ImGuiCol_Text, ImVec4{ 0.15f, 0.96f, 0.69f, 0.8f });
-			ImGui::Text("Undetectable with OpenGL2.0");
-			ImGui::PopStyleColor();
-
-			ImGui::Text("Vendor: ");
-			ImGui::SameLine();
-			ImGui::PushStyleColor(ImGuiCol_Text, ImVec4{ 0.15f, 0.96f, 0.69f, 0.8f });
-			ImGui::Text("Undetectable with OpenGL2.0");
-			ImGui::PopStyleColor();
-
-			ImGui::Text("Vram Budget: ");
-			ImGui::SameLine();
-			ImGui::PushStyleColor(ImGuiCol_Text, ImVec4{ 0.15f, 0.96f, 0.69f, 0.8f });
-			ImGui::Text("%.1f Mb", App->VramTotal);
-			ImGui::PopStyleColor();
-
-			ImGui::Text("Vram Usage: ");
-			ImGui::SameLine();
-			ImGui::PushStyleColor(ImGuiCol_Text, ImVec4{ 0.15f, 0.96f, 0.69f, 0.8f });
-			ImGui::Text("%.1f Mb", App->VramUsage);
-			ImGui::PopStyleColor();
-
-			ImGui::Text("Vram Available: ");
-			ImGui::SameLine();
-			ImGui::PushStyleColor(ImGuiCol_Text, ImVec4{ 0.15f, 0.96f, 0.69f, 0.8f });
-			ImGui::Text("%.1f Mb", App->VramAvailable);
-			ImGui::PopStyleColor();
-
-			ImGui::Text("Vram Rreserved: ");
-			ImGui::SameLine();
-			ImGui::PushStyleColor(ImGuiCol_Text, ImVec4{ 0.15f, 0.96f, 0.69f, 0.8f });
-			ImGui::Text("%.1f Mb", App->VramReserved);
 			ImGui::PopStyleColor();
 		}
 		ImGui::End();
@@ -302,8 +310,8 @@ update_status Editor::Update(float dt)
 // Called before quitting
 bool Editor::CleanUp()
 {
-	delete about;
-	about = nullptr;
+	/*delete about;
+	about = nullptr;*/
 
 	return true;
 }

@@ -112,7 +112,7 @@ bool Application::Init()
 
 	// Erase last ", "
 	int l = caps.size();
-	caps.erase(l - 1, l);
+	caps.erase(l - 2, l - 1);
 
 	gpuIntegratedVendor = (const char*)glGetString(GL_VENDOR);
 	gpuIntegratedModel = (const char*)glGetString(GL_RENDERER);
@@ -261,14 +261,17 @@ bool Application::LoadConfig()
 		maxFPS = app.attribute("maxFPS").as_int();
 
 		// Load window config
-		pugi::xml_node window = config.child("Window");
-		editor->width = window.attribute("w").as_int();
-		editor->height = window.attribute("h").as_int();
-		editor->brightness = window.attribute("brightness").as_float();
-		editor->fullscreen = window.attribute("fullscreen").as_bool();
-		editor->fullscreenDesk = window.attribute("fulldesk").as_bool();
-		editor->resizable = window.attribute("resizable").as_bool();
-		editor->borderless = window.attribute("borderless").as_bool();
+		pugi::xml_node windowNode = config.child("Window");
+		window->width = windowNode.attribute("w").as_int();
+		window->height = windowNode.attribute("h").as_int();
+		window->brightness = windowNode.attribute("brightness").as_float();
+		window->fullscreen = windowNode.attribute("fullscreen").as_bool();
+		window->fullscreenDesk = windowNode.attribute("fulldesk").as_bool();
+		window->resizable = windowNode.attribute("resizable").as_bool();
+		window->borderless = windowNode.attribute("borderless").as_bool();
+
+		pugi::xml_node rendererNode = config.child("Renderer");
+		renderer3D->vsync = rendererNode.attribute("vsync").as_bool();
 	}
 
 	return ret;
@@ -290,14 +293,17 @@ bool Application::SaveConfig()
 	app.append_attribute("maxFPS") = maxFPS;
 
 	// Window save
-	pugi::xml_node window = base.append_child("Window");
-	window.append_attribute("w") = editor->width;
-	window.append_attribute("h") = editor->height;
-	window.append_attribute("brightness") = editor->brightness;
-	window.append_attribute("fullscreen") = editor->fullscreen;
-	window.append_attribute("fulldesk") = editor->fullscreenDesk;
-	window.append_attribute("resizable") = editor->resizable;
-	window.append_attribute("borderless") = editor->borderless;
+	pugi::xml_node windowNode = base.append_child("Window");
+	windowNode.append_attribute("w") = window->width;
+	windowNode.append_attribute("h") = window->height;
+	windowNode.append_attribute("brightness") = window->brightness;
+	windowNode.append_attribute("fullscreen") = window->fullscreen;
+	windowNode.append_attribute("fulldesk") = window->fullscreenDesk;
+	windowNode.append_attribute("resizable") = window->resizable;
+	windowNode.append_attribute("borderless") = window->borderless;
+
+	pugi::xml_node rendererNode = base.append_child("Renderer");
+	rendererNode.append_attribute("vsync") = renderer3D->vsync;
 
 	bool succ = file.save_file(CONFIG_FILNAME);
 	if (succ != true)

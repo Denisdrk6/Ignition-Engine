@@ -19,16 +19,18 @@ public:
 
 	void OnResize(int width, int height);
 
-
-	bool show_demo_window = true;
-	bool show_another_window = false;
-
 public:
 
 	Light lights[MAX_LIGHTS];
 	SDL_GLContext gl_context;
 	mat3x3 NormalMatrix;
 	mat4x4 ModelMatrix, ViewMatrix, ProjectionMatrix;
+
+	bool show_demo_window = true;
+	bool show_another_window = false;
+
+	// Config vars
+	bool vsync = false;
 
 	ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 0.00f);
 };

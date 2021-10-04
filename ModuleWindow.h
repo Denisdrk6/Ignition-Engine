@@ -33,6 +33,19 @@ public:
 	//The surface contained by the window
 	SDL_Surface* screen_surface;
 
+	//Config vars
+	bool fullscreen = false;
+	bool fullscreenDesk = false;
+	bool resizable = false;
+	bool borderless = false;
+
+		// Sliders data
+	float brightness = 1.0f;
+	int width = 1280;
+	int maxWidth = 1500;
+	int height = 1024;
+	int maxHeight = 1500;
+
 private:
 	std::string title;
 };

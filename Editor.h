@@ -10,7 +10,7 @@
 
 class Application;
 
-class Tab
+/*class Tab
 {
 public:
 	Tab(bool active) { this->active = active; }
@@ -20,7 +20,7 @@ public:
 
 private:
 	bool active;
-};
+};*/
 
 class Editor : public Module
 {
@@ -35,33 +35,20 @@ public:
 	bool Start();
 	update_status Update(float dt);
 	bool CleanUp();
-
-	// VARIABLES ARE PUBLIC SO WINDOW MODULE CAN ACCESESS THEM
-	// App config
-	char appTitle[64];
-	char orgName[64];
-
-	// Window options declared here so we don't have to call window module each frame
-	bool fullscreen = false;
-	bool fullscreenDesk = false;
-	bool resizable = false;
-	bool borderless = false;
-
-	// Sliders data
-	float brightness = 1.0f;
-	int width = 1280;
-	int maxWidth = 1500;
-	int height = 1024;
-	int maxHeight = 1500;
 	
 private:
-	Tab* about;
+	//Tab* about;
+	bool about = false;
 
 	// Our state
 	bool toolMenu = false;
 	bool showcaseDemo = false;
 	bool show_another_window = false;
 	bool config = false;
+
+	// App variables needed here so we can change window name
+	char appTitle[64];
+	char orgName[64];
 };
 
 #endif // __Editor_H__

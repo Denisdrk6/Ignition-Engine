@@ -30,13 +30,13 @@ bool ModuleWindow::Init()
 	SDL_WindowFlags window_flags = (SDL_WindowFlags)(SDL_WINDOW_OPENGL | SDL_WINDOW_ALLOW_HIGHDPI);
 
 	// Config file stuff
-	if (App->editor->resizable) window_flags = (SDL_WindowFlags)(window_flags | SDL_WINDOW_RESIZABLE);
-	if (App->editor->borderless) window_flags = (SDL_WindowFlags)(window_flags | SDL_WINDOW_BORDERLESS);
+	if (resizable) window_flags = (SDL_WindowFlags)(window_flags | SDL_WINDOW_RESIZABLE);
+	if (borderless) window_flags = (SDL_WindowFlags)(window_flags | SDL_WINDOW_BORDERLESS);
 
-	window = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, App->editor->width, App->editor->height, window_flags);
+	window = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, window_flags);
 	
 	// More config file stuff
-	SDL_SetWindowBrightness(window, App->editor->brightness);
+	SDL_SetWindowBrightness(window, brightness);
 
 	return ret;
 }
