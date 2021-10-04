@@ -5,8 +5,6 @@ VisualStudioVersion = 16.0.31402.337
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Ignition-engine", "Ignition-engine.vcxproj", "{746CC4C3-787F-4B0E-AA66-E388FE3FF4F6}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MathGeoLib", "MathGeoLib\MathGeoLib.vcxproj", "{5C9EA0C0-0086-4362-87D0-9BDA2549BB77}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -21,14 +19,6 @@ Global
 		{746CC4C3-787F-4B0E-AA66-E388FE3FF4F6}.Release|Win32.ActiveCfg = Release|Win32
 		{746CC4C3-787F-4B0E-AA66-E388FE3FF4F6}.Release|Win32.Build.0 = Release|Win32
 		{746CC4C3-787F-4B0E-AA66-E388FE3FF4F6}.Release|x64.ActiveCfg = Release|Win32
-		{5C9EA0C0-0086-4362-87D0-9BDA2549BB77}.Debug|Win32.ActiveCfg = Debug|Win32
-		{5C9EA0C0-0086-4362-87D0-9BDA2549BB77}.Debug|Win32.Build.0 = Debug|Win32
-		{5C9EA0C0-0086-4362-87D0-9BDA2549BB77}.Debug|x64.ActiveCfg = Debug|x64
-		{5C9EA0C0-0086-4362-87D0-9BDA2549BB77}.Debug|x64.Build.0 = Debug|x64
-		{5C9EA0C0-0086-4362-87D0-9BDA2549BB77}.Release|Win32.ActiveCfg = Release|Win32
-		{5C9EA0C0-0086-4362-87D0-9BDA2549BB77}.Release|Win32.Build.0 = Release|Win32
-		{5C9EA0C0-0086-4362-87D0-9BDA2549BB77}.Release|x64.ActiveCfg = Release|x64
-		{5C9EA0C0-0086-4362-87D0-9BDA2549BB77}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
