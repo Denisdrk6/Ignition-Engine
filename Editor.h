@@ -44,7 +44,7 @@ private:
 	bool toolMenu = false;
 	bool showcaseDemo = false;
 	bool show_another_window = false;
-	bool config = false;
+	bool config = true;
 
 	// App variables needed here so we can change window name
 	char appTitle[64];

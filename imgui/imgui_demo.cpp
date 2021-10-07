@@ -279,7 +279,7 @@ void ImGui::ShowDemoWindow(bool* p_open)
     static bool show_app_documents = false;
 
     static bool show_app_console = false;
-    static bool show_app_log = false;
+    static bool show_app_log = true;
     static bool show_app_layout = false;
     static bool show_app_property_editor = false;
     static bool show_app_long_text = false;
@@ -6664,34 +6664,34 @@ static void ShowExampleAppConsole(bool* p_open)
 //  my_log.Draw("title");
 struct ExampleAppLog
 {
-    ImGuiTextBuffer     Buf;
-    ImGuiTextFilter     Filter;
-    ImVector<int>       LineOffsets; // Index to lines offset. We maintain this with AddLog() calls.
-    bool                AutoScroll;  // Keep scrolling if already at the bottom.
+    ImGuiTextBuffer     buffer;
+    ImGuiTextFilter     filter;
+    ImVector<int>       lineOffsets; // Index to lines offset. We maintain this with AddLog() calls.
+    bool                autoScroll;  // Keep scrolling if already at the bottom.
 
     ExampleAppLog()
     {
-        AutoScroll = true;
+        autoScroll = true;
         Clear();
     }
 
     void    Clear()
     {
-        Buf.clear();
-        LineOffsets.clear();
-        LineOffsets.push_back(0);
+        buffer.clear();
+        lineOffsets.clear();
+        lineOffsets.push_back(0);
     }
 
     void    AddLog(const char* fmt, ...) IM_FMTARGS(2)
     {
-        int old_size = Buf.size();
+        int old_size = buffer.size();
         va_list args;
         va_start(args, fmt);
-        Buf.appendfv(fmt, args);
+        buffer.appendfv(fmt, args);
         va_end(args);
-        for (int new_size = Buf.size(); old_size < new_size; old_size++)
-            if (Buf[old_size] == '\n')
-                LineOffsets.push_back(old_size + 1);
+        for (int new_size = buffer.size(); old_size < new_size; old_size++)
+            if (buffer[old_size] == '\n')
+                lineOffsets.push_back(old_size + 1);
     }
 
     void    Draw(const char* title, bool* p_open = NULL)
@@ -6705,7 +6705,7 @@ struct ExampleAppLog
         // Options menu
         if (ImGui::BeginPopup("Options"))
         {
-            ImGui::Checkbox("Auto-scroll", &AutoScroll);
+            ImGui::Checkbox("Auto-scroll", &autoScroll);
             ImGui::EndPopup();
         }
 
@@ -6717,7 +6717,7 @@ struct ExampleAppLog
         ImGui::SameLine();
         bool copy = ImGui::Button("Copy");
         ImGui::SameLine();
-        Filter.Draw("Filter", -100.0f);
+        filter.Draw("Filter", -100.0f);
 
         ImGui::Separator();
         ImGui::BeginChild("scrolling", ImVec2(0, 0), false, ImGuiWindowFlags_HorizontalScrollbar);
@@ -6728,19 +6728,19 @@ struct ExampleAppLog
             ImGui::LogToClipboard();
 
         ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0, 0));
-        const char* buf = Buf.begin();
-        const char* buf_end = Buf.end();
-        if (Filter.IsActive())
+        const char* buf = buffer.begin();
+        const char* buf_end = buffer.end();
+        if (filter.IsActive())
         {
             // In this example we don't use the clipper when Filter is enabled.
             // This is because we don't have a random access on the result on our filter.
             // A real application processing logs with ten of thousands of entries may want to store the result of
             // search/filter.. especially if the filtering function is not trivial (e.g. reg-exp).
-            for (int line_no = 0; line_no < LineOffsets.Size; line_no++)
+            for (int line_no = 0; line_no < lineOffsets.Size; line_no++)
             {
-                const char* line_start = buf + LineOffsets[line_no];
-                const char* line_end = (line_no + 1 < LineOffsets.Size) ? (buf + LineOffsets[line_no + 1] - 1) : buf_end;
-                if (Filter.PassFilter(line_start, line_end))
+                const char* line_start = buf + lineOffsets[line_no];
+                const char* line_end = (line_no + 1 < lineOffsets.Size) ? (buf + lineOffsets[line_no + 1] - 1) : buf_end;
+                if (filter.PassFilter(line_start, line_end))
                     ImGui::TextUnformatted(line_start, line_end);
             }
         }
@@ -6760,13 +6760,13 @@ struct ExampleAppLog
             // anymore, which is why we don't use the clipper. Storing or skimming through the search result would make
             // it possible (and would be recommended if you want to search through tens of thousands of entries).
             ImGuiListClipper clipper;
-            clipper.Begin(LineOffsets.Size);
+            clipper.Begin(lineOffsets.Size);
             while (clipper.Step())
             {
                 for (int line_no = clipper.DisplayStart; line_no < clipper.DisplayEnd; line_no++)
                 {
-                    const char* line_start = buf + LineOffsets[line_no];
-                    const char* line_end = (line_no + 1 < LineOffsets.Size) ? (buf + LineOffsets[line_no + 1] - 1) : buf_end;
+                    const char* line_start = buf + lineOffsets[line_no];
+                    const char* line_end = (line_no + 1 < lineOffsets.Size) ? (buf + lineOffsets[line_no + 1] - 1) : buf_end;
                     ImGui::TextUnformatted(line_start, line_end);
                 }
             }
@@ -6774,7 +6774,7 @@ struct ExampleAppLog
         }
         ImGui::PopStyleVar();
 
-        if (AutoScroll && ImGui::GetScrollY() >= ImGui::GetScrollMaxY())
+        if (autoScroll && ImGui::GetScrollY() >= ImGui::GetScrollMaxY())
             ImGui::SetScrollHereY(1.0f);
 
         ImGui::EndChild();

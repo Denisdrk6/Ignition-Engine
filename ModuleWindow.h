@@ -26,6 +26,8 @@ public:
 	void SetBrightness(float brightness);
 	void SetSize(int w, int h);
 	void SetBorder(bool borderless);
+	update_status ManageEvent(SDL_Event* event);
+
 public:
 	//The window we'll be rendering to
 	SDL_Window* window;

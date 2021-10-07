@@ -491,6 +491,9 @@
     <ClInclude Include="MathGeoLib\src\MathGeoLib.h">
       <Filter>MathGeoLib</Filter>
     </ClInclude>
+    <ClInclude Include="Log.h">
+      <Filter>Helplers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="imgui">

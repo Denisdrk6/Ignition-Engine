@@ -12,6 +12,10 @@ Application::Application()
 	camera = new ModuleCamera3D(this);
 	physics = new ModulePhysics3D(this);
 
+	log = new Logger();
+
+	log->AddLog("-------------- Application Creation --------------\n");
+
 	// The order of calls is very important!
 	// Modules will Init() Start() and Update in this order
 	// They will CleanUp() in reverse order
@@ -62,6 +66,8 @@ bool Application::Init()
 	if (!fin.fail()) LoadConfig();
 	else SaveConfig();
 
+	log->AddLog("Initializing modules\n");
+
 	// Call Init() in all modules
 	std::list<Module*>::iterator iterator = list_modules.begin();
 	Module* item;
@@ -74,7 +80,7 @@ bool Application::Init()
 	}
 
 	// After all Init calls we call Start() in all modules
-	MYLOG("Application Start --------------");
+	log->AddLog("-------------- Application Start --------------\n");
 	iterator = list_modules.begin();
 
 	while(iterator != list_modules.end() && ret == true)
@@ -86,7 +92,7 @@ bool Application::Init()
 	
 	ms_timer.Start();
 
-	SDL_GetVersion(&ver);
+	SDL_GetVersion(&SDLversion);
 	cpuCount = SDL_GetCPUCount();
 	cpuCacheSize = SDL_GetCPUCacheLineSize();
 	ram = SDL_GetSystemRAM() / 1000;
@@ -117,15 +123,8 @@ bool Application::Init()
 	gpuIntegratedVendor = (const char*)glGetString(GL_VENDOR);
 	gpuIntegratedModel = (const char*)glGetString(GL_RENDERER);
 
-	/*GLint totalMemory = 0;
-	glGetIntegerv(GL_GPU_MEMORY_INFO_TOTAL_AVAILABLE_MEMORY_NVX,
-		&totalMemory);
-	VramTotal = totalMemory / 1000.0f;
-
-	GLint availableMemory = 0;
-	glGetIntegerv(GL_GPU_MEMORY_INFO_CURRENT_AVAILABLE_VIDMEM_NVX,
-		&availableMemory);
-	VramAvailable = availableMemory / 1000.0f;*/
+	SDL_GL_GetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, &GLverMajor);
+	SDL_GL_GetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, &GLverMinor);
 
 	return ret;
 }
@@ -245,12 +244,12 @@ bool Application::LoadConfig()
 	// TODO 3: Check result for loading errors
 	if (result == NULL)
 	{
-		MYLOG("Could not load config xml file. pugi error: %s", result.description());
+		log->AddLog("Could not load config xml file. pugi error: %s\n", result.description());
 		ret = false;
 	}
 	else
 	{
-		MYLOG("Loading configuration");
+		log->AddLog("Loading configuration\n");
 
 		config = configFile.child("config");
 
@@ -281,7 +280,7 @@ bool Application::SaveConfig()
 {
 	bool ret = true;
 
-	MYLOG("Saving configuration in %s", CONFIG_FILNAME);
+	log->AddLog("Saving configuration in %s\n", CONFIG_FILNAME);
 
 	pugi::xml_document file;
 	pugi::xml_node base = file.append_child("config");
@@ -308,9 +307,9 @@ bool Application::SaveConfig()
 	bool succ = file.save_file(CONFIG_FILNAME);
 	if (succ != true)
 	{
-		MYLOG("Config file save error. pugi error: %d", pugi::status_internal_error);
+		log->AddLog("Config file save error. pugi error: %d\n", pugi::status_internal_error);
 	}
-	else MYLOG("... finished saving");
+	else log->AddLog("... finished saving\n");
 
 	return ret;
 }

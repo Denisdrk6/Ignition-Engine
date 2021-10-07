@@ -35,6 +35,8 @@ bool ModuleInput::Init()
 // Called every draw update
 update_status ModuleInput::PreUpdate(float dt)
 {
+	update_status ret = UPDATE_CONTINUE;
+
 	SDL_PumpEvents();
 
 	const Uint8* keys = SDL_GetKeyboardState(NULL);
@@ -87,6 +89,8 @@ update_status ModuleInput::PreUpdate(float dt)
 	SDL_Event e;
 	while(SDL_PollEvent(&e))
 	{
+		ImGui_ImplSDL2_ProcessEvent(&e);
+
 		switch(e.type)
 		{
 			case SDL_MOUSEWHEEL:
@@ -107,8 +111,7 @@ update_status ModuleInput::PreUpdate(float dt)
 
 			case SDL_WINDOWEVENT:
 			{
-				if(e.window.event == SDL_WINDOWEVENT_RESIZED)
-					App->renderer3D->OnResize(e.window.data1, e.window.data2);
+				ret = App->window->ManageEvent(&e);
 			}
 		}
 	}
@@ -116,7 +119,7 @@ update_status ModuleInput::PreUpdate(float dt)
 	if(quit == true || keyboard[SDL_SCANCODE_ESCAPE] == KEY_UP)
 		return UPDATE_STOP;
 
-	return UPDATE_CONTINUE;
+	return ret;
 }
 
 // Called before quitting

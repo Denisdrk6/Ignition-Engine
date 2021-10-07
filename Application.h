@@ -3,6 +3,8 @@
 
 #include "Globals.h"
 #include "Timer.h"
+#include "Log.h"
+
 #include "Module.h"
 #include "ModuleWindow.h"
 #include "ModuleInput.h"
@@ -37,6 +39,7 @@ public:
 	ModuleRenderer3D* renderer3D;
 	ModuleCamera3D* camera;
 	ModulePhysics3D* physics;
+	Logger* log;
 	
 	SDL_GLContext gl_context;
 
@@ -51,7 +54,9 @@ public:
 	int cpuCount = 0;
 	int cpuCacheSize = 0;
 	float ram = 0.0f;
-	SDL_version ver;
+	SDL_version SDLversion;
+	int GLverMajor = 0;
+	int GLverMinor = 0;
 	std::string caps = "";
 	std::string gpuIntegratedVendor = "";
 	std::string gpuIntegratedModel = "";

@@ -43,16 +43,6 @@ bool ModuleWindow::Init()
 
 update_status ModuleWindow::Update(float dt)
 {
-	// Check if we are closing the window
-	SDL_Event event;
-	while (SDL_PollEvent(&event))
-	{
-		ImGui_ImplSDL2_ProcessEvent(&event);
-		if (event.type == SDL_QUIT)
-			return update_status::UPDATE_STOP;
-		if (event.type == SDL_WINDOWEVENT && event.window.event == SDL_WINDOWEVENT_CLOSE && event.window.windowID == SDL_GetWindowID(App->window->window))
-			return update_status::UPDATE_STOP;
-	}
 
 	return update_status::UPDATE_CONTINUE;
 }
@@ -71,6 +61,20 @@ bool ModuleWindow::CleanUp()
 	//Quit SDL subsystems
 	SDL_Quit();
 	return true;
+}
+
+update_status ModuleWindow::ManageEvent(SDL_Event* e)
+{
+	if (e->window.event == SDL_WINDOWEVENT_CLOSE)
+		return update_status::UPDATE_STOP;
+
+	else if (e->window.event == SDL_WINDOWEVENT_RESIZED)
+	{
+		App->renderer3D->OnResize(e->window.data1, e->window.data2);
+		width = e->window.data1;
+		height = e->window.data2;
+	}
+	return UPDATE_CONTINUE;
 }
 
 void ModuleWindow::SetTitle()

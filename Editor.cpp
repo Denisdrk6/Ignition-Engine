@@ -70,39 +70,107 @@ update_status Editor::Update(float dt)
 
 			if (ImGui::MenuItem("Report a bug")) App->RequestBrowser("https://github.com/d0n3val/Edu-Game-Engine/issues");
 
-			ImGui::MenuItem("About");
-
-			if(ImGui::IsItemHovered())
-				ImGui::OpenPopup("About");
-
-			ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{ 0.0f , 0.0f , 0.0f , 0.0f });
-
-			if (ImGui::BeginPopup("About"))
+			if (ImGui::TreeNode("About"))
 			{
+				ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{ 0.15f , 0.96f , 0.33f , 0.05f });
+
+				ImGui::Text("");
+
 				ImGui::Text("Ignition Engine V0.1");
 				ImGui::Text("The next-gen 3D game engine.");
 				ImGui::Text("By");
 				ImGui::SameLine();
+				ImGui::PushStyleColor(ImGuiCol_Text, ImVec4{ 0.15f, 0.96f, 0.33f, 0.8f });
 				if (ImGui::Button("Denis Deconinck")) App->RequestBrowser("https://github.com/Denisdrk6");
+				ImGui::PopStyleColor();
 				ImGui::SameLine();
 				ImGui::Text("&");
 				ImGui::SameLine();
+				ImGui::PushStyleColor(ImGuiCol_Text, ImVec4{ 0.15f, 0.96f, 0.33f, 0.8f });
 				if (ImGui::Button("Pol Pallares")) App->RequestBrowser("https://github.com/Zeta115");
+				ImGui::PopStyleColor();
+
+				ImGui::Separator();
 
 				ImGui::Text("3rd Party Libraries Used:");
+
 				ImGui::BulletText("SDL2");
-				ImGui::BulletText("OpenGL 2.0");
+				ImGui::SameLine();
+				ImGui::Text("%d.%d.%d", App->SDLversion.major, App->SDLversion.minor, App->SDLversion.patch);
+				ImGui::SameLine();
+				ImGui::PushStyleColor(ImGuiCol_Text, ImVec4{ 0.15f, 0.96f, 0.33f, 0.8f });
+				if (ImGui::Button("WEB")) App->RequestBrowser("https://www.libsdl.org/download-2.0.php");
+				ImGui::PopStyleColor();
+
+				ImGui::BulletText("OpenGL");
+				ImGui::SameLine();
+				ImGui::Text("%d.%d", App->GLverMajor, App->GLverMinor);
+				ImGui::SameLine();
+				ImGui::PushStyleColor(ImGuiCol_Text, ImVec4{ 0.15f, 0.96f, 0.33f, 0.8f });
+				if (ImGui::Button("WEB")) App->RequestBrowser("https://www.opengl.org//");
+				ImGui::PopStyleColor();
+
+				ImGui::BulletText("Glew 2.0.0");
+				ImGui::SameLine();
+				ImGui::PushStyleColor(ImGuiCol_Text, ImVec4{ 0.15f, 0.96f, 0.33f, 0.8f });
+				if (ImGui::Button("WEB")) App->RequestBrowser("http://glew.sourceforge.net/");
+				ImGui::PopStyleColor();
+
 				ImGui::BulletText("ImGui");
-				ImGui::BulletText("MathGeoLib");
-				ImGui::BulletText("PugiXML");
+				ImGui::SameLine();
+				ImGui::Text(ImGui::GetVersion());
+				ImGui::SameLine();
+				ImGui::PushStyleColor(ImGuiCol_Text, ImVec4{ 0.15f, 0.96f, 0.33f, 0.8f });
+				if (ImGui::Button("WEB")) App->RequestBrowser("https://github.com/ocornut/imgu");
+				ImGui::PopStyleColor();
 
-				ImGui::EndPopup();
+				ImGui::BulletText("MathGeoLib 1.5");
+				ImGui::SameLine();
+				ImGui::PushStyleColor(ImGuiCol_Text, ImVec4{ 0.15f, 0.96f, 0.33f, 0.8f });
+				if (ImGui::Button("WEB")) App->RequestBrowser("https://github.com/juj/MathGeoLib");
+				ImGui::PopStyleColor();
+
+				ImGui::BulletText("PugiXML 1.6");
+				ImGui::SameLine();
+				ImGui::PushStyleColor(ImGuiCol_Text, ImVec4{ 0.15f, 0.96f, 0.33f, 0.8f });
+				if (ImGui::Button("WEB")) App->RequestBrowser("https://github.com/zeux/pugixml");
+				ImGui::PopStyleColor();
+
+				ImGui::Separator();
+
+				ImGui::Text("MIT License");
+				ImGui::Text("");
+
+				ImGui::Text("Copyright(c) 2021 Denisdrk6");
+				ImGui::Text("");
+
+				ImGui::Text("Permission is hereby granted, free of charge, to any person obtaining a copy");
+				ImGui::Text("of this softwareand associated documentation files(the \"Software\"), to deal");
+				ImGui::Text("in the Software without restriction, including without limitation the rights");
+				ImGui::Text("to use, copy, modify, merge, publish, distribute, sublicense, and /or sell");
+				ImGui::Text("copies of the Software, and to permit persons to whom the Software is");
+				ImGui::Text("furnished to do so, subject to the following conditions :");
+				ImGui::Text("");
+
+				ImGui::Text("The above copyright noticeand this permission notice shall be included in all");
+				ImGui::Text("copies or substantial portions of the Software.");
+				ImGui::Text("");
+
+				ImGui::Text("THE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR");
+				ImGui::Text("IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,");
+				ImGui::Text("FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.IN NO EVENT SHALL THE");
+				ImGui::Text("AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER");
+				ImGui::Text("LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,");
+				ImGui::Text("OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE");
+				ImGui::Text("SOFTWARE.");
+
+				ImGui::PopStyleColor();
+				ImGui::TreePop();
 			}
-
-			ImGui::PopStyleColor();
 
 			ImGui::EndMenu();
 		}
+
 		ImGui::EndMainMenuBar();
 	}
 
@@ -131,6 +199,8 @@ update_status Editor::Update(float dt)
 
 		ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 		ImGui::End();
+
+		App->log->Draw("LOG", NULL, App->window);
 	}
 
 	// 3. Show another simple window.
@@ -145,7 +215,10 @@ update_status Editor::Update(float dt)
 
 	if (config)
 	{
-		ImGui::Begin("Configuration", &config);
+		ImGui::SetNextWindowSize({ 300.0f, (float)App->window->height - 20.0f });
+		ImGui::SetNextWindowPos({ 0.0f, 20.0f }); // Main menu bar is 20px high
+
+		ImGui::Begin("Configuration", &config, ImGuiWindowFlags_AlwaysAutoResize);
 		ImGui::Text("Options");
 		ImGuiTreeNodeFlags(ImGuiTreeNodeFlags_Framed);
 		
@@ -205,6 +278,7 @@ update_status Editor::Update(float dt)
 			{
 				App->window->SetFullscreen(App->window->fullscreen);
 				App->window->fullscreenDesk = false;
+				SDL_GetWindowSize(App->window->window, &App->window->width, &App->window->height);
 			}
 
 			ImGui::SameLine();
@@ -212,6 +286,7 @@ update_status Editor::Update(float dt)
 			{
 				App->window->SetFullscreenDesk(App->window->fullscreenDesk);
 				App->window->fullscreen = false;
+				SDL_GetWindowSize(App->window->window, &App->window->width, &App->window->height);
 			}
 
 			if (ImGui::Checkbox("Borderless", &App->window->borderless)) // Window is borderless
@@ -262,7 +337,7 @@ update_status Editor::Update(float dt)
 			ImGui::Text("SDL Version: ");
 			ImGui::SameLine();
 			ImGui::PushStyleColor(ImGuiCol_Text, ImVec4{ 0.15f, 0.96f, 0.69f, 0.8f });
-			ImGui::Text("%d.%d.%d", App->ver.major, App->ver.minor, App->ver.patch);
+			ImGui::Text("%d.%d.%d", App->SDLversion.major, App->SDLversion.minor, App->SDLversion.patch);
 			ImGui::PopStyleColor();
 
 			ImGui::Separator();
