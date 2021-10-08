@@ -20,14 +20,6 @@ bool ModuleSceneIntro::Start()
 	App->camera->Move(vec3(1.0f, 1.0f, 0.0f));
 	App->camera->LookAt(vec3(0, 0, 0));
 
-    
-
-    /*
-    
-
-	*/
-
-
 	return ret;
 }
 
@@ -48,10 +40,10 @@ update_status ModuleSceneIntro::Update(float dt)
 
 
     //cube vertexs:
-    float3 v0 = float3(0.5f, 0.5f, 0.f);
-    float3 v1 = float3(-0.5f, 0.5f, 0.f);
-    float3 v2 = float3(-0.5f, -0.5f, 0.f);
-    float3 v3 = float3(0.5f, -0.5f, 0.f);
+    float3 v0 = float3(0.5f, 0.5f, 0.5f);
+    float3 v1 = float3(-0.5f, 0.5f, 0.5f);
+    float3 v2 = float3(-0.5f, -0.5f, 0.5f);
+    float3 v3 = float3(0.5f, -0.5f, 0.5f);
     float3 v4 = float3(0.5f, -0.5f, -0.5f);
     float3 v5 = float3(0.5f, 0.5f, -0.5f);
     float3 v6 = float3(-0.5f, 0.5f, -0.5f);
@@ -67,6 +59,7 @@ update_status ModuleSceneIntro::Update(float dt)
     glVertex3fv(v2.ptr());   
     glVertex3fv(v3.ptr());
     glVertex3fv(v0.ptr());
+
     // right face =================
     glVertex3fv(v0.ptr());  
     glVertex3fv(v3.ptr());
@@ -77,40 +70,62 @@ update_status ModuleSceneIntro::Update(float dt)
     glVertex3fv(v0.ptr());
 
     // top face ===================
+    glVertex3fv(v6.ptr());
+    glVertex3fv(v1.ptr());
+    glVertex3fv(v0.ptr());
+
     glVertex3fv(v0.ptr());   
     glVertex3fv(v5.ptr());
     glVertex3fv(v6.ptr());
-
-    glVertex3fv(v6.ptr());   
-    glVertex3fv(v1.ptr());
-    glVertex3fv(v0.ptr());
    
     // Back face =================
+    //547, 765
+
+    glVertex3fv(v5.ptr());
+    glVertex3fv(v4.ptr());
+    glVertex3fv(v7.ptr());
+
+    glVertex3fv(v7.ptr());
+    glVertex3fv(v6.ptr());
+    glVertex3fv(v5.ptr());
+
+    /*
     glVertex3fv(v5.ptr());    
     glVertex3fv(v6.ptr());
     glVertex3fv(v4.ptr());
 
     glVertex3fv(v4.ptr());   
     glVertex3fv(v6.ptr());
-    glVertex3fv(v7.ptr());
+    glVertex3fv(v7.ptr());*/
 
     // Left face =================
-    glVertex3fv(v6.ptr());    
-    glVertex3fv(v1.ptr());
-    glVertex3fv(v2.ptr());
-
-    glVertex3fv(v2.ptr());    
-    glVertex3fv(v7.ptr());
+    glVertex3fv(v1.ptr());    
     glVertex3fv(v6.ptr());
+    glVertex3fv(v7.ptr());
+
+    glVertex3fv(v7.ptr());    
+    glVertex3fv(v2.ptr());
+    glVertex3fv(v1.ptr());
 
     // Bottom face ===================
+    //432, 274
+
+    glVertex3fv(v4.ptr());
+    glVertex3fv(v3.ptr());
+    glVertex3fv(v2.ptr());
+
+    glVertex3fv(v2.ptr());
+    glVertex3fv(v7.ptr());
+    glVertex3fv(v4.ptr());
+
+    /*
     glVertex3fv(v2.ptr());   
     glVertex3fv(v3.ptr());
     glVertex3fv(v7.ptr());
 
     glVertex3fv(v3.ptr());   
     glVertex3fv(v4.ptr());
-    glVertex3fv(v7.ptr());
+    glVertex3fv(v7.ptr());*/
     glEnd();
 
 	return UPDATE_CONTINUE;

@@ -18,6 +18,7 @@ public:
 
 	bool Init();
 	update_status Update(float dt);
+	update_status PreUpdate(float dt);
 	bool CleanUp();
 
 	void SetTitle();
@@ -50,6 +51,8 @@ public:
 
 private:
 	std::string title;
+
+	bool resized = false;
 };
 
 #endif // __ModuleWindow_H__
