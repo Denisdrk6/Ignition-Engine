@@ -81,6 +81,7 @@ bool Application::Init()
 
 	// After all Init calls we call Start() in all modules
 	log->AddLog("-------------- Application Start --------------\n");
+	log->AddLog("Starting modules\n");
 	iterator = list_modules.begin();
 
 	while(iterator != list_modules.end() && ret == true)
@@ -244,7 +245,7 @@ bool Application::LoadConfig()
 	// TODO 3: Check result for loading errors
 	if (result == NULL)
 	{
-		log->AddLog("Could not load config xml file. pugi error: %s\n", result.description());
+		log->AddLog("[error] Could not load config xml file. pugi error: %s\n", result.description());
 		ret = false;
 	}
 	else

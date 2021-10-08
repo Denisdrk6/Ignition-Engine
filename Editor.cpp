@@ -179,7 +179,7 @@ update_status Editor::Update(float dt)
 		ImGui::ShowDemoWindow(&showcaseDemo);
 
 	// 2. Show a simple window that we create ourselves. We use a Begin/End pair to created a named window.
-	{
+	/*{
 		static float f = 0.0f;
 		static int counter = 0;
 
@@ -211,14 +211,20 @@ update_status Editor::Update(float dt)
 		if (ImGui::Button("Close Me"))
 			show_another_window = false;
 		ImGui::End();
-	}
+	}*/
+
+	App->log->Draw("LOG", NULL, App->window);
 
 	if (config)
 	{
 		ImGui::SetNextWindowSize({ 300.0f, (float)App->window->height - 20.0f });
 		ImGui::SetNextWindowPos({ 0.0f, 20.0f }); // Main menu bar is 20px high
 
-		ImGui::Begin("Configuration", &config, ImGuiWindowFlags_AlwaysAutoResize);
+		if(config)
+			ImGui::Begin("Configuration", NULL, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse); // Cannot be manually closed by user
+		else
+			ImGui::Begin("Configuration", &config, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse);
+
 		ImGui::Text("Options");
 		ImGuiTreeNodeFlags(ImGuiTreeNodeFlags_Framed);
 		

@@ -60,7 +60,7 @@ struct Logger
         ImGui::SameLine();
         bool clear = ImGui::Button("Clear");
         ImGui::SameLine();
-        filter.Draw("Filter", -50.0f);
+        filter.Draw("Search", -50.0f);
 
         ImGui::Separator();
         ImGui::BeginChild("scrolling", ImVec2(0, 0), false, ImGuiWindowFlags_HorizontalScrollbar);
