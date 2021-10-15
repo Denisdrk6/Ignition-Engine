@@ -40,10 +40,10 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>$(SolutionDir)\SDL\include;$(SolutionDir)\imgui;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)\GLEW\include\GL;$(SolutionDir)\SDL\include;$(SolutionDir)\imgui;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>$(SolutionDir)\SDL\include;$(SolutionDir)\imgui;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)\GLEW\include\GL;$(SolutionDir)\SDL\include;$(SolutionDir)\imgui;$(IncludePath)</IncludePath>
     <LinkIncremental>true</LinkIncremental>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -60,7 +60,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
-      <AdditionalLibraryDirectories>$(SolutionDir)\SDL\libx86;$(SolutionDir)\Assimp\libx86;$(SolutionDir)\MathGeoLib\libx86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)\SDL\libx86;$(SolutionDir)\Assimp\libx86;$(SolutionDir)\MathGeoLib\libx86;C:\Users\Usuari\Documents\GitHub\Ignition-Engine\GLEW\libx32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>SDL2.lib;SDL2main.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
@@ -82,13 +82,17 @@
       <OptimizeReferences>true</OptimizeReferences>
       <SubSystem>Windows</SubSystem>
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
-      <AdditionalLibraryDirectories>$(SolutionDir)\SDL\libx86;$(SolutionDir)\Assimp\libx86;$(SolutionDir)\MathGeoLib\libx86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)\SDL\libx86;$(SolutionDir)\Assimp\libx86;$(SolutionDir)\MathGeoLib\libx86;C:\Users\Usuari\Documents\GitHub\Ignition-Engine\GLEW\libx32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>SDL2.lib;SDL2main.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
     <ClInclude Include="Color.h" />
+    <ClInclude Include="GLEW\include\GL\eglew.h" />
+    <ClInclude Include="GLEW\include\GL\glew.h" />
+    <ClInclude Include="GLEW\include\GL\glxew.h" />
+    <ClInclude Include="GLEW\include\GL\wglew.h" />
     <ClInclude Include="Log.h" />
     <ClInclude Include="Editor.h" />
     <ClInclude Include="glmath.h" />

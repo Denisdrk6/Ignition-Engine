@@ -43,16 +43,7 @@ bool ModuleWindow::Init()
 
 update_status ModuleWindow::PreUpdate(float dt)
 {
-	// Recalculate projection matrix
-	if (resized)
-	{
-		glClearColor(App->renderer3D->clear_color.x * App->renderer3D->clear_color.w, App->renderer3D->clear_color.y * App->renderer3D->clear_color.w, App->renderer3D->clear_color.z * App->renderer3D->clear_color.w, App->renderer3D->clear_color.w);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		glMatrixMode(GL_MODELVIEW);
-		glLoadMatrixf(App->camera->GetViewMatrix());
-		glViewport(0, 0, width, height);
-		resized = false;
-	}
+
 	return update_status::UPDATE_CONTINUE;
 }
 
@@ -88,7 +79,6 @@ update_status ModuleWindow::ManageEvent(SDL_Event* e)
 		App->renderer3D->OnResize(e->window.data1, e->window.data2);
 		width = e->window.data1;
 		height = e->window.data2;
-		resized = true;
 	}
 	return UPDATE_CONTINUE;
 }

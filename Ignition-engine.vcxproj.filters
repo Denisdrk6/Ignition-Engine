@@ -494,6 +494,18 @@
     <ClInclude Include="Log.h">
       <Filter>Helplers</Filter>
     </ClInclude>
+    <ClInclude Include="GLEW\include\GL\eglew.h">
+      <Filter>GLEW</Filter>
+    </ClInclude>
+    <ClInclude Include="GLEW\include\GL\glew.h">
+      <Filter>GLEW</Filter>
+    </ClInclude>
+    <ClInclude Include="GLEW\include\GL\glxew.h">
+      <Filter>GLEW</Filter>
+    </ClInclude>
+    <ClInclude Include="GLEW\include\GL\wglew.h">
+      <Filter>GLEW</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="imgui">
@@ -510,6 +522,9 @@
     </Filter>
     <Filter Include="MathGeoLib">
       <UniqueIdentifier>{395b40ed-8a1a-469f-9803-28f0c594cba2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GLEW">
+      <UniqueIdentifier>{30c0f8a7-d918-4d6b-8e12-daaf314a937f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

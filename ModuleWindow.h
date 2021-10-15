@@ -51,8 +51,6 @@ public:
 
 private:
 	std::string title;
-
-	bool resized = false;
 };
 
 #endif // __ModuleWindow_H__
