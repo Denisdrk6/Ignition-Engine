@@ -81,7 +81,6 @@ update_status ModuleSceneIntro::Update(float dt)
     glVertex3fv(v6.ptr());
 
     // Back face =================
-    //547, 765
 
     glVertex3fv(v5.ptr());
     glVertex3fv(v4.ptr());
@@ -91,14 +90,6 @@ update_status ModuleSceneIntro::Update(float dt)
     glVertex3fv(v6.ptr());
     glVertex3fv(v5.ptr());
 
-    /*
-    glVertex3fv(v5.ptr());
-    glVertex3fv(v6.ptr());
-    glVertex3fv(v4.ptr());
-
-    glVertex3fv(v4.ptr());
-    glVertex3fv(v6.ptr());
-    glVertex3fv(v7.ptr());*/
 
     // Left face =================
     glVertex3fv(v1.ptr());
@@ -110,7 +101,6 @@ update_status ModuleSceneIntro::Update(float dt)
     glVertex3fv(v1.ptr());
 
     // Bottom face ===================
-    //432, 274
 
     glVertex3fv(v4.ptr());
     glVertex3fv(v3.ptr());
@@ -119,15 +109,28 @@ update_status ModuleSceneIntro::Update(float dt)
     glVertex3fv(v2.ptr());
     glVertex3fv(v7.ptr());
     glVertex3fv(v4.ptr());
+
+    glEnableClientState(GL_VERTEX_ARRAY);
+    glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 
     /*
-    glVertex3fv(v2.ptr());
-    glVertex3fv(v3.ptr());
-    glVertex3fv(v7.ptr());
+    //__________buffers____________
 
-    glVertex3fv(v3.ptr());
-    glVertex3fv(v4.ptr());
-    glVertex3fv(v7.ptr());*/
+    glBindBuffer(GL_ARRAY_BUFFER, vertexBufferId);
+    glVertexPointer(3, GL_FLOAT, 0, NULL);
+
+    glBindBuffer(GL_ARRAY_BUFFER, textureBufferId);
+    glTexCoordPointer(2, GL_FLOAT, 0, NULL);
+
+    glBindTexture(GL_TEXTURE_2D, textureId);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBufferId);
+
+    //__________draw____________
+
+    glDrawElements(GL_TRIANGLES, numIndices, GL_UNSIGNET_INT, NULL);
+
+    */
+
     glEnd();
 
 	return UPDATE_CONTINUE;
@@ -137,6 +140,20 @@ update_status ModuleSceneIntro::Update(float dt)
 bool ModuleSceneIntro::CleanUp()
 {
     MYLOG("Unloading Intro scene");
+
+    /*
+    //__________Unbind buffers____________
+
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindBuffer(GL_TEXTURE_COORD_ARRAY, 0);
+    glBindBuffer(GL_TEXTURE_2D, 0);
+
+    //___________DISABLE STATES__________
+
+    glDisableClientState(GL_VERTEX_ARRAY);
+    glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+    */
 
     return true;
 }
