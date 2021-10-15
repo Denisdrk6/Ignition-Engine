@@ -494,16 +494,16 @@
     <ClInclude Include="Log.h">
       <Filter>Helplers</Filter>
     </ClInclude>
-    <ClInclude Include="GLEW\include\GL\eglew.h">
+    <ClInclude Include="GLEW\include\eglew.h">
       <Filter>GLEW</Filter>
     </ClInclude>
-    <ClInclude Include="GLEW\include\GL\glew.h">
+    <ClInclude Include="GLEW\include\glew.h">
       <Filter>GLEW</Filter>
     </ClInclude>
-    <ClInclude Include="GLEW\include\GL\glxew.h">
+    <ClInclude Include="GLEW\include\glxew.h">
       <Filter>GLEW</Filter>
     </ClInclude>
-    <ClInclude Include="GLEW\include\GL\wglew.h">
+    <ClInclude Include="GLEW\include\wglew.h">
       <Filter>GLEW</Filter>
     </ClInclude>
   </ItemGroup>

@@ -1,21 +1,15 @@
 #pragma once
 
-
 #include "Globals.h"
 #include "Timer.h"
 #include "Log.h"
 
-#include "Module.h"
-#include "ModuleWindow.h"
-#include "ModuleInput.h"
-#include "ModuleSceneIntro.h"
-#include "Editor.h"
-#include "ModuleRenderer3D.h"
-#include "ModuleCamera3D.h"
-#include "ModulePhysics3D.h"
-
+// Include libraries
 #include "SDL.h"
+#include "GLEW/include/glew.h"
 #include "SDL_opengl.h"
+#include <gl/GL.h>
+#include <gl/GLU.h>
 
 #include "imgui.h"
 #include "imgui_impl_sdl.h"
@@ -24,8 +18,17 @@
 #include <list>
 #include <vector>
 
-
 #include "PugiXml/src/pugixml.hpp"
+
+// Include Modules
+#include "Module.h"
+#include "ModuleWindow.h"
+#include "ModuleInput.h"
+#include "ModuleSceneIntro.h"
+#include "Editor.h"
+#include "ModuleRenderer3D.h"
+#include "ModuleCamera3D.h"
+#include "ModulePhysics3D.h"
 
 #define CONFIG_FILNAME "config.xml"
 

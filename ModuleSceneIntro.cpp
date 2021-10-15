@@ -23,9 +23,11 @@ bool ModuleSceneIntro::Start()
 	return ret;
 }
 
-// Update: draw background
+// Update: draw scene
 update_status ModuleSceneIntro::Update(float dt)
 {
+
+    bool ret = true;
 
     PrimPlane p(0, 1, 0, 0);
     p.axis = true;
@@ -48,24 +50,24 @@ update_status ModuleSceneIntro::Update(float dt)
     float3 v5 = float3(0.5f, 0.5f, -0.5f);
     float3 v6 = float3(-0.5f, 0.5f, -0.5f);
     float3 v7 = float3(-0.5f, -0.5f, -0.5f);
-    
+
     glBegin(GL_TRIANGLES);  // draw a cube with 12 triangles
 
     // front face =================
-    glVertex3fv(v0.ptr());   
+    glVertex3fv(v0.ptr());
     glVertex3fv(v1.ptr());
     glVertex3fv(v2.ptr());
 
-    glVertex3fv(v2.ptr());   
+    glVertex3fv(v2.ptr());
     glVertex3fv(v3.ptr());
     glVertex3fv(v0.ptr());
 
     // right face =================
-    glVertex3fv(v0.ptr());  
+    glVertex3fv(v0.ptr());
     glVertex3fv(v3.ptr());
     glVertex3fv(v4.ptr());
 
-    glVertex3fv(v4.ptr());   
+    glVertex3fv(v4.ptr());
     glVertex3fv(v5.ptr());
     glVertex3fv(v0.ptr());
 
@@ -74,10 +76,10 @@ update_status ModuleSceneIntro::Update(float dt)
     glVertex3fv(v1.ptr());
     glVertex3fv(v0.ptr());
 
-    glVertex3fv(v0.ptr());   
+    glVertex3fv(v0.ptr());
     glVertex3fv(v5.ptr());
     glVertex3fv(v6.ptr());
-   
+
     // Back face =================
     //547, 765
 
@@ -90,20 +92,20 @@ update_status ModuleSceneIntro::Update(float dt)
     glVertex3fv(v5.ptr());
 
     /*
-    glVertex3fv(v5.ptr());    
+    glVertex3fv(v5.ptr());
     glVertex3fv(v6.ptr());
     glVertex3fv(v4.ptr());
 
-    glVertex3fv(v4.ptr());   
+    glVertex3fv(v4.ptr());
     glVertex3fv(v6.ptr());
     glVertex3fv(v7.ptr());*/
 
     // Left face =================
-    glVertex3fv(v1.ptr());    
+    glVertex3fv(v1.ptr());
     glVertex3fv(v6.ptr());
     glVertex3fv(v7.ptr());
 
-    glVertex3fv(v7.ptr());    
+    glVertex3fv(v7.ptr());
     glVertex3fv(v2.ptr());
     glVertex3fv(v1.ptr());
 
@@ -119,11 +121,11 @@ update_status ModuleSceneIntro::Update(float dt)
     glVertex3fv(v4.ptr());
 
     /*
-    glVertex3fv(v2.ptr());   
+    glVertex3fv(v2.ptr());
     glVertex3fv(v3.ptr());
     glVertex3fv(v7.ptr());
 
-    glVertex3fv(v3.ptr());   
+    glVertex3fv(v3.ptr());
     glVertex3fv(v4.ptr());
     glVertex3fv(v7.ptr());*/
     glEnd();

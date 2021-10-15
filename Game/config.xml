@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <config>
 	<App name="Ignition Engine" org="CITM Students" maxFPS="60" />
-	<Window w="1624" h="987" brightness="1" fullscreen="false" fulldesk="false" resizable="true" borderless="false" />
+	<Window w="998" h="734" brightness="1" fullscreen="false" fulldesk="false" resizable="true" borderless="false" />
 	<Renderer vsync="false" />
 </config>

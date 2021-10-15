@@ -44,7 +44,6 @@ bool Editor::Start()
 update_status Editor::Update(float dt)
 {
 
-
 	//ImGui::Begin("Tool Bar", &toolMenu, ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoDecoration);
 	//ImGui::BeginMainMenuBar();
 	if (ImGui::BeginMainMenuBar())
@@ -220,14 +219,14 @@ update_status Editor::Update(float dt)
 		ImGui::SetNextWindowSize({ 300.0f, (float)App->window->height - 20.0f });
 		ImGui::SetNextWindowPos({ 0.0f, 20.0f }); // Main menu bar is 20px high
 
-		if(config)
+		if (config)
 			ImGui::Begin("Configuration", NULL, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse); // Cannot be manually closed by user
 		else
 			ImGui::Begin("Configuration", &config, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse);
 
 		ImGui::Text("Options");
 		ImGuiTreeNodeFlags(ImGuiTreeNodeFlags_Framed);
-		
+
 
 		if (ImGui::CollapsingHeader("Application")) // App configuration
 		{
@@ -279,7 +278,7 @@ update_status Editor::Update(float dt)
 				if (ImGui::SliderInt("Height", &App->window->height, 540, App->window->maxHeight)) // Height
 					App->window->SetSize(App->window->width, App->window->height);
 			}
-			
+
 			if (ImGui::Checkbox("Fullscreen", &App->window->fullscreen)) // Fullscreen
 			{
 				App->window->SetFullscreen(App->window->fullscreen);
@@ -383,7 +382,6 @@ update_status Editor::Update(float dt)
 		}
 		ImGui::End();
 	}
-	
 
 	return update_status::UPDATE_CONTINUE;
 }

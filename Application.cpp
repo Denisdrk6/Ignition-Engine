@@ -20,16 +20,17 @@ Application::Application()
 	// Modules will Init() Start() and Update in this order
 	// They will CleanUp() in reverse order
 
-	AddModule(editor); // The first one so we can load variables from Json file
-
 	// Main Modules
 	AddModule(window);
 	AddModule(camera);
 	AddModule(input);
 	AddModule(physics);
 	
-	// Scenes
+	// Scene
 	AddModule(scene_intro);
+
+	// Editor over scene
+	AddModule(editor);
 
 	// Renderer last!
 	AddModule(renderer3D);
