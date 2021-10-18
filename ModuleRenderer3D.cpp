@@ -23,8 +23,8 @@ bool ModuleRenderer3D::Init()
 	gl_context = SDL_GL_CreateContext(App->window->window);
 	SDL_GL_MakeCurrent(App->window->window, gl_context);
 	SDL_GL_SetSwapInterval(1); // Enable vsync
-	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
-	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1);
+	//SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+	//SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1);
 
 	// Setup Dear ImGui context
 	IMGUI_CHECKVERSION();
@@ -136,22 +136,40 @@ bool ModuleRenderer3D::Init()
 		GLfloat MaterialDiffuse[] = {1.0f, 1.0f, 1.0f, 1.0f};
 		glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, MaterialDiffuse);
 		
-		glEnable(GL_DEPTH_TEST);
-		glEnable(GL_CULL_FACE);
+		if(App->GLdepthTest) glEnable(GL_DEPTH_TEST);
+		if (App->GLcullFace) glEnable(GL_CULL_FACE);
 		lights[0].Active(true);
-		glEnable(GL_LIGHTING);
-		glEnable(GL_COLOR_MATERIAL);
-		glEnable(GL_TEXTURE_2D);
+		if (App->GLlightning) glEnable(GL_LIGHTING);
+		if(App->GLcolorMaterial) glEnable(GL_COLOR_MATERIAL);
+		if(App->GLtexture2D) glEnable(GL_TEXTURE_2D);
+		if(App->GLlineSmooth) glEnable(GL_LINE_SMOOTH);
+		if (App->GLfog)
+		{
+			glEnable(GL_FOG);
+			float FogCol[3] = { App->fogR, App->fogG, App->fogB }; // Define a nice light grey
+			glFogfv(GL_FOG_COLOR, FogCol); // Set the fog color
+			if (App->fogLinear)glFogi(GL_FOG_MODE, GL_LINEAR); // GL_LINEAR constant is an integer.
+			else
+			{
+				glFogi(GL_FOG_MODE, GL_EXP);
+				glFogf(GL_FOG_DENSITY, App->fogDensity);
+			}
+			glFogf(GL_FOG_START, App->fogStart);
+			glFogf(GL_FOG_END, App->fogEnd);
+			gluPerspective(45.0f, 800.0f / 600.0f, 1.0f, 60.0f); // Fog allows us to shorten the far clipping plane
+		}
 	}
 
 	glViewport(0, 0, App->window->width, App->window->height);
-
-	GLenum err = glewInit();
+	
 	// … check for errors
-	App->log->AddLog("Using Glew %s\n", glewGetString(GLEW_VERSION));
+	GLenum err = glewInit();
 
 	// Calculate projection matrix
 	OnResize(App->window->width, App->window->height);
+
+	if(!App->wireframe) glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	else glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
 	return ret;
 }

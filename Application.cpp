@@ -128,6 +128,11 @@ bool Application::Init()
 	SDL_GL_GetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, &GLverMajor);
 	SDL_GL_GetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, &GLverMinor);
 
+	glewVersion = (const char*)glewGetString(GLEW_VERSION);
+
+	log->AddLog("Using Glew %s\n", glewVersion.c_str());
+	log->AddLog("Using OpenGL %d.%d\n", GLverMajor, GLverMinor);
+
 	return ret;
 }
 
@@ -273,6 +278,26 @@ bool Application::LoadConfig()
 
 		pugi::xml_node rendererNode = config.child("Renderer");
 		renderer3D->vsync = rendererNode.attribute("vsync").as_bool();
+
+
+		pugi::xml_node openGL = config.child("OpenGL");
+		GLdepthTest = openGL.attribute("depthTest").as_bool();
+		GLcullFace = openGL.attribute("cullFace").as_bool();
+		GLlightning = openGL.attribute("lightning").as_bool();
+		GLcolorMaterial = openGL.attribute("colorMaterial").as_bool();
+		GLtexture2D = openGL.attribute("texture2D").as_bool();
+		GLlineSmooth = openGL.attribute("lineSmooth").as_bool();
+		wireframe = openGL.attribute("wireframe").as_bool();
+		pugi::xml_node fog = openGL.child("Fog");
+		GLfog = fog.attribute("active").as_bool();
+		fogLinear = fog.attribute("linear").as_bool();
+		fogExpo = fog.attribute("expo").as_bool();
+		fogR = fog.attribute("red").as_float();
+		fogG = fog.attribute("green").as_float();
+		fogB = fog.attribute("blue").as_float();
+		fogStart = fog.attribute("start").as_float();
+		fogEnd = fog.attribute("end").as_float();
+		fogDensity = fog.attribute("density").as_float();
 	}
 
 	return ret;
@@ -287,12 +312,14 @@ bool Application::SaveConfig()
 	pugi::xml_document file;
 	pugi::xml_node base = file.append_child("config");
 
+	//APPLICATION
 	// App save
 	pugi::xml_node app = base.append_child("App");
 	app.append_attribute("name") = appTitle.c_str();
 	app.append_attribute("org") = orgName.c_str();
 	app.append_attribute("maxFPS") = maxFPS;
 
+	//MODULES
 	// Window save
 	pugi::xml_node windowNode = base.append_child("Window");
 	windowNode.append_attribute("w") = window->width;
@@ -303,8 +330,30 @@ bool Application::SaveConfig()
 	windowNode.append_attribute("resizable") = window->resizable;
 	windowNode.append_attribute("borderless") = window->borderless;
 
+	// Renderer save
 	pugi::xml_node rendererNode = base.append_child("Renderer");
 	rendererNode.append_attribute("vsync") = renderer3D->vsync;
+
+	//GRAPHICS
+	//OpenGL
+	pugi::xml_node openGL = base.append_child("OpenGL");
+	openGL.append_attribute("depthTest") = GLdepthTest;
+	openGL.append_attribute("cullFace") = GLcullFace;
+	openGL.append_attribute("lightning") = GLlightning;
+	openGL.append_attribute("colorMaterial") = GLcolorMaterial;
+	openGL.append_attribute("texture2D") = GLtexture2D;
+	openGL.append_attribute("lineSmooth") = GLlineSmooth;
+	openGL.append_attribute("wireframe") = wireframe;
+	pugi::xml_node fog = openGL.append_child("Fog");
+	fog.append_attribute("active") = GLfog;
+	fog.append_attribute("linear") = fogLinear;
+	fog.append_attribute("expo") = fogExpo;
+	fog.append_attribute("red") = fogR;
+	fog.append_attribute("green") = fogG;
+	fog.append_attribute("blue") = fogB;
+	fog.append_attribute("start") = fogStart;
+	fog.append_attribute("end") = fogEnd;
+	fog.append_attribute("density") = fogDensity;
 
 	bool succ = file.save_file(CONFIG_FILNAME);
 	if (succ != true)

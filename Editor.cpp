@@ -109,7 +109,9 @@ update_status Editor::Update(float dt)
 				if (ImGui::Button("WEB")) App->RequestBrowser("https://www.opengl.org//");
 				ImGui::PopStyleColor();
 
-				ImGui::BulletText("Glew 2.0.0");
+				ImGui::BulletText("GLEW");
+				ImGui::SameLine();
+				ImGui::Text(App->glewVersion.c_str());
 				ImGui::SameLine();
 				ImGui::PushStyleColor(ImGuiCol_Text, ImVec4{ 0.15f, 0.96f, 0.33f, 0.8f });
 				if (ImGui::Button("WEB")) App->RequestBrowser("http://glew.sourceforge.net/");
@@ -224,7 +226,7 @@ update_status Editor::Update(float dt)
 		else
 			ImGui::Begin("Configuration", &config, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse);
 
-		ImGui::Text("Options");
+		ImGui::Text("App");
 		ImGuiTreeNodeFlags(ImGuiTreeNodeFlags_Framed);
 
 
@@ -264,6 +266,8 @@ update_status Editor::Update(float dt)
 			sprintf_s(title, 25, "Miliseconds %.1f", App->ms_log[App->ms_log.size() - 1]);
 			ImGui::PlotHistogram("##MILISECONDS", &App->ms_log[0], App->ms_log.size(), 0, title, 0.0f, 40.0f, ImVec2(310, 100));
 		}
+
+		ImGui::Text("Modules");
 
 		if (ImGui::CollapsingHeader("Window")) // Window configuration
 		{
@@ -380,6 +384,132 @@ update_status Editor::Update(float dt)
 			ImGui::Text(App->gpuIntegratedVendor.c_str());
 			ImGui::PopStyleColor();
 		}
+
+		ImGui::Text("Graphics");
+
+		if (ImGui::CollapsingHeader("OpenGL")) // Window configuration
+		{
+
+			if (ImGui::Checkbox("Deepth Test", &App->GLdepthTest))
+			{
+				if(App->GLdepthTest) glEnable(GL_DEPTH_TEST);
+				else glDisable(GL_DEPTH_TEST);
+			}
+
+			ImGui::SameLine();
+			if (ImGui::Checkbox("Cull Face", &App->GLcullFace))
+			{
+				if (App->GLcullFace) glEnable(GL_CULL_FACE);
+				else glDisable(GL_CULL_FACE);
+			}
+
+			if (ImGui::Checkbox("Lightning", &App->GLlightning))
+			{
+				if (App->GLlightning) glEnable(GL_LIGHTING);
+				else glDisable(GL_LIGHTING);
+			}
+
+			ImGui::SameLine();
+			if (ImGui::Checkbox("Color Material", &App->GLcolorMaterial))
+			{
+				if (App->GLcolorMaterial) glEnable(GL_COLOR_MATERIAL);
+				else glDisable(GL_COLOR_MATERIAL);
+			}
+
+			if (ImGui::Checkbox("Texture 2D", &App->GLtexture2D))
+			{
+				if (App->GLtexture2D) glEnable(GL_TEXTURE_2D);
+				else glDisable(GL_TEXTURE_2D);
+			}
+
+			ImGui::SameLine();
+			if (ImGui::Checkbox("Line Smooth", &App->GLlineSmooth))
+			{
+				if (App->GLlineSmooth) glEnable(GL_LINE_SMOOTH);
+				else glDisable(GL_LINE_SMOOTH);
+			}
+
+			if (ImGui::Checkbox("Fog", &App->GLfog))
+			{
+				if (App->GLfog)
+				{
+					glEnable(GL_FOG);
+					float FogCol[3] = { App->fogR, App->fogG, App->fogB }; // Define a nice light grey
+					glFogfv(GL_FOG_COLOR, FogCol); // Set the fog color
+					if(App->fogLinear)glFogi(GL_FOG_MODE, GL_LINEAR); // GL_LINEAR constant is an integer.
+					else
+					{
+						glFogi(GL_FOG_MODE, GL_EXP);
+						glFogf(GL_FOG_DENSITY, App->fogDensity);
+					}
+					glFogf(GL_FOG_START, App->fogStart);
+					glFogf(GL_FOG_END, App->fogEnd);
+					gluPerspective(45.0f, 800.0f / 600.0f, 1.0f, 60.0f); // Fog allows us to shorten the far clipping plane
+				}
+				else glDisable(GL_FOG);
+			}
+
+			if (App->GLfog)
+			{
+				ImGui::Text("----FOG----");
+
+				if (ImGui::Checkbox("Linear", &App->fogLinear))
+				{
+					glFogi(GL_FOG_MODE, GL_LINEAR);
+					if (App->fogExpo) App->fogExpo = false; // Evita que linear y exponencial esten desmarcadas a la vez, siempre tiene que haber uno
+					else App->fogLinear = true;
+				}
+
+				if (ImGui::Checkbox("Exponential", &App->fogExpo))
+				{
+					glFogi(GL_FOG_MODE, GL_EXP);
+					if (App->fogLinear) App->fogLinear = false;
+					else App->fogExpo = true;
+				}
+
+				if (ImGui::SliderFloat("Red", &App->fogR, 0.0f, 1.0f)) // Red
+				{
+					float FogCol[3] = { App->fogR, App->fogG, App->fogB }; // Define a nice light grey
+					glFogfv(GL_FOG_COLOR, FogCol); // Set the fog color
+				}
+
+				if (ImGui::SliderFloat("Green", &App->fogG, 0.0f, 1.0f)); // Green
+				{
+					float FogCol[3] = { App->fogR, App->fogG, App->fogB }; // Define a nice light grey
+					glFogfv(GL_FOG_COLOR, FogCol); // Set the fog color
+				}
+
+				if (ImGui::SliderFloat("Blue", &App->fogB, 0.0f, 1.0f)); // Blue
+				{
+					float FogCol[3] = { App->fogR, App->fogG, App->fogB }; // Define a nice light grey
+					glFogfv(GL_FOG_COLOR, FogCol); // Set the fog color
+				}
+
+				if (App->fogLinear)
+				{
+					if (ImGui::SliderFloat("Start", &App->fogStart, 10.0f, 39.0f)); // Blue
+					{
+						glFogf(GL_FOG_START, App->fogStart);
+					}
+
+					if (ImGui::SliderFloat("End", &App->fogEnd, 40.0f, 80.0f)); // Blue
+					{
+						glFogf(GL_FOG_END, App->fogEnd);
+					}
+				}
+
+				else
+				{
+					if (ImGui::SliderFloat("Density", &App->fogDensity, 0.0f, 0.8f)); // Blue
+					{
+						glFogf(GL_FOG_DENSITY, App->fogDensity);
+					}
+				}
+			}
+
+			ImGui::Checkbox("Wireframe", &App->wireframe);
+		}
+
 		ImGui::End();
 	}
 

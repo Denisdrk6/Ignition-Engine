@@ -40,6 +40,10 @@ update_status ModuleSceneIntro::Update(float dt)
     p.axis = true;
     p.Render();
 
+    //Wireframe mode
+    if (!App->wireframe) glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+    else glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
 
     glBegin(GL_LINES);
     glLineWidth(2.0f);  //draw 1 Line

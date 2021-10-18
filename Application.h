@@ -60,9 +60,30 @@ public:
 	SDL_version SDLversion;
 	int GLverMajor = 0;
 	int GLverMinor = 0;
+	std::string glewVersion = "";
 	std::string caps = "";
 	std::string gpuIntegratedVendor = "";
 	std::string gpuIntegratedModel = "";
+
+	//OpenGL options
+	bool GLdepthTest = true;
+	bool GLcullFace = true;
+	bool GLlightning = true;
+	bool GLcolorMaterial = true;
+	bool GLtexture2D = true;
+	bool GLlineSmooth = false;
+
+	bool GLfog = true;
+	bool fogLinear = true;
+	bool fogExpo = false;
+	float fogR = 0.8f;
+	float fogG = 0.8f;
+	float fogB = 0.8f;
+	float fogStart = 10.0f;
+	float fogEnd = 40.0f;
+	float fogDensity = 1.0f;
+
+	bool wireframe = true;
 
 private:
 	
