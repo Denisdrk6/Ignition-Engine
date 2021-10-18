@@ -2,7 +2,6 @@
 #include "Application.h"
 #include "ModuleSceneIntro.h"
 #include "Primitive.h"
-#include "Math/float3.h"
 
 ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
@@ -19,6 +18,14 @@ bool ModuleSceneIntro::Start()
 
 	App->camera->Move(vec3(1.0f, 1.0f, 0.0f));
 	App->camera->LookAt(vec3(0, 0, 0));
+
+    glGenBuffers(1, (GLuint*)&(my_id));
+    glBindBuffer(GL_ARRAY_BUFFER, my_id);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(float) * num_vertices * 3, vertices, GL_STATIC_DRAW);
+
+    glGenBuffers(1, (GLuint*)&(my_indices));
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, my_indices);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * num_indices, indices, GL_STATIC_DRAW);
 
 	return ret;
 }
@@ -42,7 +49,7 @@ update_status ModuleSceneIntro::Update(float dt)
 
 
     //cube vertexs:
-    float3 v0 = float3(0.5f, 0.5f, 0.5f);
+    /*float3 v0 = float3(0.5f, 0.5f, 0.5f);
     float3 v1 = float3(-0.5f, 0.5f, 0.5f);
     float3 v2 = float3(-0.5f, -0.5f, 0.5f);
     float3 v3 = float3(0.5f, -0.5f, 0.5f);
@@ -113,10 +120,53 @@ update_status ModuleSceneIntro::Update(float dt)
     glEnableClientState(GL_VERTEX_ARRAY);
     glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 
+    glEnd();*/
+
+    //cube vertexs:
+    /*float3 v0 = float3(0.5f, 0.5f, 0.5f);
+    float3 v1 = float3(-0.5f, 0.5f, 0.5f);
+    float3 v2 = float3(-0.5f, -0.5f, 0.5f);
+    float3 v3 = float3(0.5f, -0.5f, 0.5f);
+    float3 v4 = float3(0.5f, -0.5f, -0.5f);
+    float3 v5 = float3(0.5f, 0.5f, -0.5f);
+    float3 v6 = float3(-0.5f, 0.5f, -0.5f);
+    float3 v7 = float3(-0.5f, -0.5f, -0.5f);
+
+    glEnableClientState(GL_VERTEX_ARRAY);
+    //Set
+    uint my_id = 0;
+    const int num_vertices = 6 * 6; // caras por vertices (cada cara tiene 2 triangulos, cada triangulo 3 vertices)
+    float3 vertices[num_vertices] = { v0, v1, v2, v2, v3, v0, v0, v3, v4, v4, v5, v0, v6, v1, v0, v0, v5, v6, v5, v4, v7, v7, v6, v5, v1, v6, v7, v7, v2, v1, v4, v3, v2, v2, v7, v4};
+    glGenBuffers(1, (GLuint*)&(my_id));
+    glBindBuffer(GL_ARRAY_BUFFER, my_id);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(float) * num_vertices * 3, vertices, GL_STATIC_DRAW);
+
+    //Draw
+    glBindBuffer(GL_ARRAY_BUFFER, my_id);
+    glVertexPointer(3, GL_FLOAT, 0, NULL);
+    glDrawArrays(GL_TRIANGLES, 0, num_vertices);
+
+    glDisableClientState(GL_VERTEX_ARRAY);*/
+
+    //glEnableClientState(GL_VERTEX_ARRAY);
+
+
+
+    //////////////////
+
+    glEnableClientState(GL_VERTEX_ARRAY);
+    glBindBuffer(GL_ARRAY_BUFFER, my_id);
+    glVertexPointer(3, GL_FLOAT, 0, NULL);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, my_indices);
+    glDrawElements(GL_TRIANGLES, num_indices, GL_UNSIGNED_INT, NULL);
+
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+    glDisableClientState(GL_VERTEX_ARRAY);
+
     /*
     //__________buffers____________
 
-    glBindBuffer(GL_ARRAY_BUFFER, vertexBufferId);
     glVertexPointer(3, GL_FLOAT, 0, NULL);
 
     glBindBuffer(GL_ARRAY_BUFFER, textureBufferId);
@@ -130,8 +180,6 @@ update_status ModuleSceneIntro::Update(float dt)
     glDrawElements(GL_TRIANGLES, numIndices, GL_UNSIGNET_INT, NULL);
 
     */
-
-    glEnd();
 
 	return UPDATE_CONTINUE;
 }
