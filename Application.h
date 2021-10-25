@@ -29,6 +29,7 @@
 #include "ModuleRenderer3D.h"
 #include "ModuleCamera3D.h"
 #include "ModulePhysics3D.h"
+#include "FbxLoader.h"
 
 #define CONFIG_FILNAME "config.xml"
 
@@ -43,6 +44,7 @@ public:
 	ModuleCamera3D* camera;
 	ModulePhysics3D* physics;
 	Logger* log;
+	FbxLoader* fbx;
 	
 	SDL_GLContext gl_context;
 

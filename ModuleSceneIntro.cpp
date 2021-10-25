@@ -168,6 +168,8 @@ update_status ModuleSceneIntro::Update(float dt)
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
     glDisableClientState(GL_VERTEX_ARRAY);
 
+    App->fbx->LoadFbx("/Game/Assets/warrior.fbx");
+
     /*
     //__________buffers____________
 

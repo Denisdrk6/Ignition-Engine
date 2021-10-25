@@ -40,7 +40,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>$(SolutionDir)\GLEW\include;$(SolutionDir)\SDL\include;$(SolutionDir)\imgui;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)\GLEW\include;$(SolutionDir)\SDL\include;$(SolutionDir)\imgui;$(SolutionDir)\Assimp\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <IncludePath>$(SolutionDir)\GLEW\include;$(SolutionDir)\SDL\include;$(SolutionDir)\imgui;$(IncludePath)</IncludePath>

@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <config>
 	<App name="Ignition Engine" org="CITM Students" maxFPS="60" />
-	<Window w="1680" h="987" brightness="1" fullscreen="false" fulldesk="false" resizable="true" borderless="false" />
+	<Window w="1529" h="845" brightness="1" fullscreen="false" fulldesk="false" resizable="true" borderless="false" />
 	<Renderer vsync="false" />
 	<OpenGL depthTest="false" cullFace="false" lightning="false" colorMaterial="false" texture2D="false" lineSmooth="false" wireframe="false">
 		<Fog active="false" linear="false" expo="false" red="0" green="0" blue="0" start="0" end="0" density="0" />

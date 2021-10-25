@@ -1,20 +1,15 @@
-#ifndef _FbxLoader_
-#define _FbxLoader_
+#ifndef __FbxLoader_H__
+#define __FbxLoader_H__
 
-#include "Assimp/include/Assimp/cimport.h"
-#include "Assimp/include/Assimp/scene.h"
-#include "Assimp/include/Assimp/postprocess.h"
+#include "Module.h"
 #include "Globals.h"
+
+#include "Assimp/cimport.h"
+#include "Assimp/scene.h"
+#include "Assimp/postprocess.h"
 #pragma comment (lib, "Assimp/libx86/assimp-vc142-mt.lib")
 
-
-
-// Stream log messages to Debug window
-struct aiLogStream stream;
-stream = aiGetPredefinedLogStream(aiDefaultLogStream_DEBUGGER, nullptr);
-aiAttachLogStream(&stream);
-
-struct MeshStorage storage {
+struct MeshStorage {
 	uint id_index = 0; // index in VRAM
 	uint num_index = 0;
 	uint* index = nullptr;
@@ -23,10 +18,25 @@ struct MeshStorage storage {
 	float* vertex = nullptr;
 };
 
+class FbxLoader : public Module
+{
+public:
+
+	FbxLoader(Application* app, bool start_enabled = true);
+	~FbxLoader();
+
+	bool Init();
+	bool Start();
+	update_status PreUpdate(float dt);
+	bool CleanUp();
+	void LoadFbx(const char* filePath);
+
+private:
+
+	// Stream log messages to Debug window
+	struct aiLogStream stream;
+};
 
 
-
-
-
-#endif // _FbxLoader_
+#endif // __FbxLoader_H__
 #pragma once

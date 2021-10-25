@@ -11,6 +11,7 @@ Application::Application()
 	renderer3D = new ModuleRenderer3D(this);
 	camera = new ModuleCamera3D(this);
 	physics = new ModulePhysics3D(this);
+	fbx = new FbxLoader(this);
 
 	log = new Logger();
 
@@ -25,6 +26,7 @@ Application::Application()
 	AddModule(camera);
 	AddModule(input);
 	AddModule(physics);
+	AddModule(fbx);
 	
 	// Scene
 	AddModule(scene_intro);
