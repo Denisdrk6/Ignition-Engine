@@ -27,6 +27,8 @@ bool ModuleSceneIntro::Start()
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, my_indices);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * num_indices, indices, GL_STATIC_DRAW);
 
+    App->fbx->LoadFbx("Assets/warrior.fbx"); //Load an FBX file
+
 	return ret;
 }
 
@@ -168,7 +170,9 @@ update_status ModuleSceneIntro::Update(float dt)
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
     glDisableClientState(GL_VERTEX_ARRAY);
 
-    App->fbx->LoadFbx("/Game/Assets/warrior.fbx");
+    //LOAD FBX 3
+    for (int i = 0; i < App->fbx->meshes.size(); i++)
+        App->renderer3D->DrawMesh(App->fbx->meshes.at(i));
 
     /*
     //__________buffers____________

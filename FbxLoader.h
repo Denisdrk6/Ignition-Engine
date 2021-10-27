@@ -3,6 +3,8 @@
 
 #include "Module.h"
 #include "Globals.h"
+#include <vector>
+#include "Math/float3.h"
 
 #include "Assimp/cimport.h"
 #include "Assimp/scene.h"
@@ -15,7 +17,7 @@ struct MeshStorage {
 	uint* index = nullptr;
 	uint id_vertex = 0; // unique vertex in VRAM
 	uint num_vertex = 0;
-	float* vertex = nullptr;
+	float3* vertex = nullptr;
 };
 
 class FbxLoader : public Module
@@ -27,9 +29,10 @@ public:
 
 	bool Init();
 	bool Start();
-	update_status PreUpdate(float dt);
+	update_status Update(float dt);
 	bool CleanUp();
 	void LoadFbx(const char* filePath);
+	std::vector< MeshStorage > meshes;
 
 private:
 

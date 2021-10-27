@@ -449,6 +449,9 @@ update_status Editor::Update(float dt)
 				else glDisable(GL_FOG);
 			}
 
+			ImGui::SameLine();
+			ImGui::Checkbox("Wireframe", &App->wireframe);
+
 			if (App->GLfog)
 			{
 				ImGui::Text("----FOG----");
@@ -506,8 +509,6 @@ update_status Editor::Update(float dt)
 					}
 				}
 			}
-
-			ImGui::Checkbox("Wireframe", &App->wireframe);
 		}
 
 		ImGui::End();

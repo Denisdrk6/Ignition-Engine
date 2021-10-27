@@ -6,6 +6,9 @@
 
 #define MAX_LIGHTS 8
 
+// Si solo usamos punteros a MeshStorage es mas eficiente hacer un forward declaration que incluir el FBXLoader.h
+struct MeshStorage;
+
 class ModuleRenderer3D : public Module
 {
 public:
@@ -16,6 +19,8 @@ public:
 	update_status PreUpdate(float dt);
 	update_status PostUpdate(float dt);
 	bool CleanUp();
+
+	bool DrawMesh(MeshStorage);
 
 	void OnResize(int width, int height);
 
