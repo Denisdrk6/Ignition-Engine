@@ -2,6 +2,8 @@
 #include "Application.h"
 #include "ModuleInput.h"
 
+#include "FbxLoader.h"
+
 #define MAX_KEYS 300
 
 ModuleInput::ModuleInput(Application* app, bool start_enabled) : Module(app, start_enabled)
@@ -19,13 +21,14 @@ ModuleInput::~ModuleInput()
 // Called before render is available
 bool ModuleInput::Init()
 {
-	MYLOG("Init SDL input event system");
+	App->log->AddLog("Loading Input Module\n");
+
 	bool ret = true;
 	SDL_Init(0);
 
 	if(SDL_InitSubSystem(SDL_INIT_EVENTS) < 0)
 	{
-		MYLOG("SDL_EVENTS could not initialize! SDL_Error: %s\n", SDL_GetError());
+		App->log->AddLog("SDL_EVENTS could not initialize! SDL_Error: %s\n", SDL_GetError());
 		ret = false;
 	}
 
@@ -112,7 +115,13 @@ update_status ModuleInput::PreUpdate(float dt)
 			case SDL_WINDOWEVENT:
 			{
 				ret = App->window->ManageEvent(&e);
+				break;
 			}
+
+			case SDL_DROPFILE:
+				App->fbx->LoadFbx(e.drop.file);
+				break;
+
 		}
 	}
 
@@ -125,7 +134,7 @@ update_status ModuleInput::PreUpdate(float dt)
 // Called before quitting
 bool ModuleInput::CleanUp()
 {
-	MYLOG("Quitting SDL input event subsystem");
+	App->log->AddLog("Quitting SDL input event subsystem\n");
 	SDL_QuitSubSystem(SDL_INIT_EVENTS);
 	return true;
 }

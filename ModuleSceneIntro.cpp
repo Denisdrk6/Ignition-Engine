@@ -3,6 +3,10 @@
 #include "ModuleSceneIntro.h"
 #include "Primitive.h"
 
+#include "FbxLoader.h"
+#include "ModuleCamera3D.h"
+#include "ModuleRenderer3D.h"
+
 ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
 }
@@ -13,21 +17,22 @@ ModuleSceneIntro::~ModuleSceneIntro()
 // Load assets
 bool ModuleSceneIntro::Start()
 {
-	MYLOG("Loading Intro assets");
+    App->log->AddLog("Loading Intro Scene\n");
 	bool ret = true;
 
-	App->camera->Move(vec3(1.0f, 1.0f, 0.0f));
-	App->camera->LookAt(vec3(0, 0, 0));
+	//App->camera->Move(vec3(1.0f, 1.0f, 0.0f));
+	//App->camera->LookAt(vec3(0, 0, 0));
 
-    glGenBuffers(1, (GLuint*)&(my_id));
+    /*glGenBuffers(1, (GLuint*)&(my_id));
     glBindBuffer(GL_ARRAY_BUFFER, my_id);
     glBufferData(GL_ARRAY_BUFFER, sizeof(float) * num_vertices * 3, vertices, GL_STATIC_DRAW);
 
     glGenBuffers(1, (GLuint*)&(my_indices));
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, my_indices);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * num_indices, indices, GL_STATIC_DRAW);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * num_indices, indices, GL_STATIC_DRAW);*/
 
-    App->fbx->LoadFbx("Assets/warrior.fbx"); //Load an FBX file
+    //App->fbx->LoadFbx("Assets/warrior.fbx"); //Load an FBX file
+   App->fbx->LoadFbx("Assets/BakerHouse.fbx");
 
 	return ret;
 }
@@ -43,16 +48,6 @@ update_status ModuleSceneIntro::Update(float dt)
     p.Render();
 
     //Wireframe mode
-    if (!App->wireframe) glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-    else glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-
-
-    glBegin(GL_LINES);
-    glLineWidth(2.0f);  //draw 1 Line
-    glVertex3f(-10.f, -5.f, -3.f);
-    glVertex3f(50.f, 50.f, 50.f);
-    glEnd();
-
 
     //cube vertexs:
     /*float3 v0 = float3(0.5f, 0.5f, 0.5f);
@@ -160,7 +155,9 @@ update_status ModuleSceneIntro::Update(float dt)
 
     //////////////////
 
-    glEnableClientState(GL_VERTEX_ARRAY);
+    //DRAW CUBE WITH VERTEX ARRAY & INDICES
+
+    /*glEnableClientState(GL_VERTEX_ARRAY);
     glBindBuffer(GL_ARRAY_BUFFER, my_id);
     glVertexPointer(3, GL_FLOAT, 0, NULL);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, my_indices);
@@ -168,10 +165,10 @@ update_status ModuleSceneIntro::Update(float dt)
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-    glDisableClientState(GL_VERTEX_ARRAY);
+    glDisableClientState(GL_VERTEX_ARRAY);*/
 
     //LOAD FBX 3
-    for (int i = 0; i < App->fbx->meshes.size(); i++)
+    for (int i = 0; !App->fbx->meshes.empty() && (i < App->fbx->meshes.size()); i++)
         App->renderer3D->DrawMesh(App->fbx->meshes.at(i));
 
     /*
@@ -197,7 +194,7 @@ update_status ModuleSceneIntro::Update(float dt)
 // Load assets
 bool ModuleSceneIntro::CleanUp()
 {
-    MYLOG("Unloading Intro scene");
+    App->log->AddLog("Unloading Intro scene\n");
 
     /*
     //__________Unbind buffers____________

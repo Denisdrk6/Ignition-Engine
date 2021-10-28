@@ -3,6 +3,8 @@
 #include "ModuleWindow.h"
 #include "Editor.h"
 
+#include "ModuleRenderer3D.h"
+
 ModuleWindow::ModuleWindow(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
 	window = NULL;
@@ -17,7 +19,7 @@ ModuleWindow::~ModuleWindow()
 // Called before render is available
 bool ModuleWindow::Init()
 {
-	MYLOG("Init SDL window & surface");
+	App->log->AddLog("Init SDL window & surface\n");
 	bool ret = true;
 
 	title = App->appTitle + " - " + App->orgName;
@@ -57,7 +59,7 @@ update_status ModuleWindow::Update(float dt)
 // Called before quitting
 bool ModuleWindow::CleanUp()
 {
-	MYLOG("Destroying SDL window and quitting all SDL systems");
+	App->log->AddLog("Destroying SDL window and quitting all SDL systems\n");
 
 	//Destroy window
 	if(window != NULL)

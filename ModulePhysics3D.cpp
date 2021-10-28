@@ -1,6 +1,7 @@
 #include "Globals.h"
 #include "Application.h"
 #include "ModulePhysics3D.h"
+#include "ModuleInput.h"
 
 // TODO 1: ...and the 3 libraries based on how we compile (Debug or Release)
 // use the _DEBUG preprocessor define
@@ -29,7 +30,7 @@ ModulePhysics3D::~ModulePhysics3D()
 // ---------------------------------------------------------
 bool ModulePhysics3D::Start()
 {
-	MYLOG("Creating Physics environment");
+	App->log->AddLog("Creating Physics environment");
 
 	// TODO 3: Create the world and set default gravity
 	// Have gravity defined in a macro!
@@ -82,7 +83,7 @@ update_status ModulePhysics3D::PostUpdate(float dt)
 // Called before quitting
 bool ModulePhysics3D::CleanUp()
 {
-	MYLOG("Destroying 3D Physics simulation");
+	App->log->AddLog("Destroying 3D Physics simulation\n");
 
 	// TODO 3: ... and destroy the world here!
 

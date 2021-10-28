@@ -17,6 +17,26 @@ void log(const char file[], int line, const char* format, ...);
 #define RADTODEG 57.295779513082320876f
 #define HAVE_M_PI
 
+// Deletes a buffer
+#define RELEASE( x ) \
+	{						\
+	if( x != NULL )		\
+		{					  \
+	  delete x;			\
+	  x = NULL;			  \
+		}					  \
+	}
+
+// Deletes an array of buffers
+#define RELEASE_ARRAY( x ) \
+	{							  \
+	if( x != NULL )			  \
+		{							\
+	  delete[] x;				\
+	  x = NULL;					\
+		}							\
+							  \
+	}
 
 typedef unsigned int uint;
 

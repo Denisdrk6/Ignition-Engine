@@ -4,6 +4,9 @@
 #include "glmath.h"
 #include "Light.h"
 
+#include "Math/float3.h"
+#include "SDL_opengl.h"
+
 #define MAX_LIGHTS 8
 
 // Si solo usamos punteros a MeshStorage es mas eficiente hacer un forward declaration que incluir el FBXLoader.h
@@ -38,4 +41,8 @@ public:
 	bool vsync = false;
 
 	ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 0.00f);
+
+	bool drawNormals = false;
+
+	bool wireframe = true;
 };

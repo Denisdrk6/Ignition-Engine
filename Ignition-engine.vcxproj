@@ -40,7 +40,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>$(SolutionDir)\GLEW\include;$(SolutionDir)\SDL\include;$(SolutionDir)\imgui;$(SolutionDir)\Assimp\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)\GLEW\include;$(SolutionDir)\SDL\include;$(SolutionDir)\imgui;$(SolutionDir)\Assimp\include;$(SolutionDir)\PhysFS\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <IncludePath>$(SolutionDir)\GLEW\include;$(SolutionDir)\SDL\include;$(SolutionDir)\imgui;$(IncludePath)</IncludePath>
@@ -60,7 +60,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
-      <AdditionalLibraryDirectories>$(SolutionDir)\SDL\libx86;$(SolutionDir)\Assimp\libx86;$(SolutionDir)\MathGeoLib\libx86;$(SolutionDir)\GLEW\libx32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)\SDL\libx86;$(SolutionDir)\Assimp\libx86;$(SolutionDir)\MathGeoLib\libx86;$(SolutionDir)\GLEW\libx32;$(SolutionDir)\PhysFS\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>SDL2.lib;SDL2main.lib;glew32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
@@ -90,6 +90,7 @@
     <ClInclude Include="Application.h" />
     <ClInclude Include="Color.h" />
     <ClInclude Include="FbxLoader.h" />
+    <ClInclude Include="FileSystem.h" />
     <ClInclude Include="GLEW\include\eglew.h" />
     <ClInclude Include="GLEW\include\glew.h" />
     <ClInclude Include="GLEW\include\glxew.h" />
@@ -200,6 +201,7 @@
     <ClCompile Include="Color.cpp" />
     <ClCompile Include="Editor.cpp" />
     <ClCompile Include="FbxLoader.cpp" />
+    <ClCompile Include="FileSystem.cpp" />
     <ClCompile Include="glmath.cpp" />
     <ClCompile Include="imgui\imgui.cpp" />
     <ClCompile Include="imgui\imgui_demo.cpp" />

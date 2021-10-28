@@ -2,6 +2,9 @@
 #include "Application.h"
 #include "Editor.h"
 
+#include "ModuleInput.h"
+#include "ModuleRenderer3D.h"
+
 Editor::Editor(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
 	//about = new Tab(true);
@@ -28,7 +31,7 @@ bool Editor::Start()
 	// depending on whether SDL_INIT_GAMECONTROLLER is enabled or disabled.. updating to latest version of SDL is recommended!)
 	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER | SDL_INIT_GAMECONTROLLER) != 0)
 	{
-		printf("Error: %s\n", SDL_GetError());
+		App->log->AddLog("SDL error: %s\n", SDL_GetError());
 		return -1;
 	}
 
@@ -316,6 +319,15 @@ update_status Editor::Update(float dt)
 
 			if (ImGui::IsItemHovered())
 				ImGui::SetTooltip("Restart to apply");
+
+			ImGui::SameLine();
+			if (ImGui::Checkbox("Wireframe", &App->renderer3D->wireframe))
+			{
+				if (!App->renderer3D->wireframe) glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+				else glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+			}
+
+			ImGui::Checkbox("Normals", &App->renderer3D->drawNormals);
 		}
 
 		if (ImGui::CollapsingHeader("Input"))
@@ -449,9 +461,6 @@ update_status Editor::Update(float dt)
 				else glDisable(GL_FOG);
 			}
 
-			ImGui::SameLine();
-			ImGui::Checkbox("Wireframe", &App->wireframe);
-
 			if (App->GLfog)
 			{
 				ImGui::Text("----FOG----");
@@ -508,6 +517,8 @@ update_status Editor::Update(float dt)
 						glFogf(GL_FOG_DENSITY, App->fogDensity);
 					}
 				}
+
+				ImGui::Text("------------");
 			}
 		}
 

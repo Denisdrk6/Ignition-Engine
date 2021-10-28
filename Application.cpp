@@ -2,8 +2,21 @@
 #include <iostream>
 #include <fstream>
 
+// Include Modules
+#include "Module.h"
+#include "ModuleWindow.h"
+#include "ModuleInput.h"
+#include "ModuleSceneIntro.h"
+#include "Editor.h"
+#include "ModuleRenderer3D.h"
+#include "ModuleCamera3D.h"
+#include "ModulePhysics3D.h"
+#include "FbxLoader.h"
+#include "FileSystem.h"
+
 Application::Application()
 {
+	log = new Logger();
 	window = new ModuleWindow(this);
 	input = new ModuleInput(this);
 	scene_intro = new ModuleSceneIntro(this);
@@ -12,16 +25,16 @@ Application::Application()
 	camera = new ModuleCamera3D(this);
 	physics = new ModulePhysics3D(this);
 	fbx = new FbxLoader(this);
+	fileSystem = new FileSystem(this,true, "/Assets/");
 
-	log = new Logger();
-
-	log->AddLog("-------------- Application Creation --------------\n");
+	log->AddLog("\n-------------- Application Creation --------------\n");
 
 	// The order of calls is very important!
 	// Modules will Init() Start() and Update in this order
 	// They will CleanUp() in reverse order
 
 	// Main Modules
+	AddModule(fileSystem);
 	AddModule(window);
 	AddModule(camera);
 	AddModule(input);
@@ -69,7 +82,7 @@ bool Application::Init()
 	if (!fin.fail()) LoadConfig();
 	else SaveConfig();
 
-	log->AddLog("Initializing modules\n");
+	log->AddLog("INITIALIZING MODULES\n");
 
 	// Call Init() in all modules
 	std::list<Module*>::iterator iterator = list_modules.begin();
@@ -83,7 +96,7 @@ bool Application::Init()
 	}
 
 	// After all Init calls we call Start() in all modules
-	log->AddLog("-------------- Application Start --------------\n");
+	log->AddLog("\n-------------- Application Start --------------\n");
 	log->AddLog("Starting modules\n");
 	iterator = list_modules.begin();
 
@@ -278,10 +291,36 @@ bool Application::LoadConfig()
 		window->resizable = windowNode.attribute("resizable").as_bool();
 		window->borderless = windowNode.attribute("borderless").as_bool();
 
+		// Load renderer config
 		pugi::xml_node rendererNode = config.child("Renderer");
 		renderer3D->vsync = rendererNode.attribute("vsync").as_bool();
+		renderer3D->drawNormals = rendererNode.attribute("normals").as_bool();
+		renderer3D->wireframe = rendererNode.attribute("wireframe").as_bool();
 
+		// Load camera config
+		pugi::xml_node cameraNode = config.child("Camera");
+		pugi::xml_node pos = cameraNode.child("Position");
+		camera->Position.x = pos.attribute("x").as_float();
+		camera->Position.y = pos.attribute("y").as_float();
+		camera->Position.z = pos.attribute("z").as_float();
+		pugi::xml_node ref = cameraNode.child("Reference");
+		camera->Reference.x = ref.attribute("x").as_float();
+		camera->Reference.y = ref.attribute("y").as_float();
+		camera->Reference.z = ref.attribute("z").as_float();
+		pugi::xml_node X = cameraNode.child("ArcballX");
+		camera->X.x = X.attribute("x").as_float();
+		camera->X.y = X.attribute("y").as_float();
+		camera->X.z = X.attribute("z").as_float();
+		pugi::xml_node Y = cameraNode.child("ArcballY");
+		camera->Y.x = Y.attribute("x").as_float();
+		camera->Y.y = Y.attribute("y").as_float();
+		camera->Y.z = Y.attribute("z").as_float();
+		pugi::xml_node Z = cameraNode.child("ArcballZ");
+		camera->Z.x = Z.attribute("x").as_float();
+		camera->Z.y = Z.attribute("y").as_float();
+		camera->Z.z = Z.attribute("z").as_float();
 
+		// Load OpenGL config
 		pugi::xml_node openGL = config.child("OpenGL");
 		GLdepthTest = openGL.attribute("depthTest").as_bool();
 		GLcullFace = openGL.attribute("cullFace").as_bool();
@@ -289,7 +328,6 @@ bool Application::LoadConfig()
 		GLcolorMaterial = openGL.attribute("colorMaterial").as_bool();
 		GLtexture2D = openGL.attribute("texture2D").as_bool();
 		GLlineSmooth = openGL.attribute("lineSmooth").as_bool();
-		wireframe = openGL.attribute("wireframe").as_bool();
 		pugi::xml_node fog = openGL.child("Fog");
 		GLfog = fog.attribute("active").as_bool();
 		fogLinear = fog.attribute("linear").as_bool();
@@ -335,6 +373,36 @@ bool Application::SaveConfig()
 	// Renderer save
 	pugi::xml_node rendererNode = base.append_child("Renderer");
 	rendererNode.append_attribute("vsync") = renderer3D->vsync;
+	rendererNode.append_attribute("normals") = renderer3D->drawNormals;
+	rendererNode.append_attribute("wireframe") = renderer3D->wireframe;
+
+	// Camera save
+
+	pugi::xml_node cameraNode = base.append_child("Camera");
+
+	pugi::xml_node pos = cameraNode.append_child("Position");
+	pos.append_attribute("x") = camera->Position.x;
+	pos.append_attribute("y") = camera->Position.y;
+	pos.append_attribute("z") = camera->Position.z;
+
+	pugi::xml_node ref = cameraNode.append_child("Reference");
+	ref.append_attribute("x") = camera->Reference.x;
+	ref.append_attribute("y") = camera->Reference.y;
+	ref.append_attribute("z") = camera->Reference.z;
+
+	pugi::xml_node X = cameraNode.append_child("ArcballX");
+	X.append_attribute("x") = camera->X.x;
+	X.append_attribute("y") = camera->X.y;
+	X.append_attribute("z") = camera->X.z;
+	pugi::xml_node Y = cameraNode.append_child("ArcballY");
+	Y.append_attribute("x") = camera->Y.x;
+	Y.append_attribute("y") = camera->Y.y;
+	Y.append_attribute("z") = camera->Y.z;
+	pugi::xml_node Z = cameraNode.append_child("ArcballZ");
+	Z.append_attribute("x") = camera->Z.x;
+	Z.append_attribute("y") = camera->Z.y;
+	Z.append_attribute("z") = camera->Z.z;
+
 
 	//GRAPHICS
 	//OpenGL
@@ -345,7 +413,6 @@ bool Application::SaveConfig()
 	openGL.append_attribute("colorMaterial") = GLcolorMaterial;
 	openGL.append_attribute("texture2D") = GLtexture2D;
 	openGL.append_attribute("lineSmooth") = GLlineSmooth;
-	openGL.append_attribute("wireframe") = wireframe;
 	pugi::xml_node fog = openGL.append_child("Fog");
 	fog.append_attribute("active") = GLfog;
 	fog.append_attribute("linear") = fogLinear;

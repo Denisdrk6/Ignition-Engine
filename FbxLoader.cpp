@@ -15,6 +15,7 @@ FbxLoader::~FbxLoader()
 // Called before render is available
 bool FbxLoader::Init()
 {
+	App->log->AddLog("Loading FBX loader\n");
 	bool ret = true;
 
 	// Activate assimp debugger
@@ -50,7 +51,8 @@ bool FbxLoader::CleanUp()
 void FbxLoader::LoadFbx(const char* fileName)
 {
 	MeshStorage ourMesh;
-	const aiScene* scene = aiImportFile(fileName, aiProcessPreset_TargetRealtime_MaxQuality);
+	//aiImportFileEx();
+	const aiScene* scene = aiImportFile(fileName, aiProcessPreset_TargetRealtime_MaxQuality | aiProcess_FlipUVs);
 	if (scene != nullptr && scene->HasMeshes())
 	{
 		for (int i = 0; i < scene->mNumMeshes; i++)
@@ -69,25 +71,57 @@ void FbxLoader::LoadFbx(const char* fileName)
 				for (uint i = 0; i < mesh->mNumFaces; ++i)
 				{
 					if (mesh->mFaces[i].mNumIndices != 3)
-						App->log->AddLog("WARNING, geometry face with != 3 indices!");
+						App->log->AddLog("WARNING, geometry face with != 3 indices!\n");
 					else
 						memcpy(&ourMesh.index[i * 3], mesh->mFaces[i].mIndices, 3 * sizeof(uint));
 				}
+			}
 
+			// copy normals
+			for (uint i = 0; i < mesh->mNumVertices; ++i)
+			{
+				VertexData tempData;
+
+				float3 position;
+				position.x = mesh->mVertices[i].x;
+				position.y = mesh->mVertices[i].y;
+				position.z = mesh->mVertices[i].z;
+				tempData.position = position;
+
+				if (mesh->HasNormals())
+				{
+					float3 normal;
+					normal.x = mesh->mNormals[i].x;
+					normal.y = mesh->mNormals[i].y;
+					normal.z = mesh->mNormals[i].z;
+					tempData.normals = normal;
+				}
+
+				if (mesh->HasTextureCoords(0))
+				{
+					float2 tempCoords;
+					tempCoords.x = mesh->mTextureCoords[0][i].x;
+					tempCoords.y = mesh->mTextureCoords[0][i].y;
+					tempData.texCoords = tempCoords;
+				}
+
+				ourMesh.vertexData.push_back(tempData);
 			}
 
 			//LOAD FBX 1
 			glGenBuffers(1, (GLuint*)&(ourMesh.id_vertex));
 			glBindBuffer(GL_ARRAY_BUFFER, ourMesh.id_vertex);
 			glBufferData(GL_ARRAY_BUFFER, sizeof(float) * ourMesh.num_vertex * 3, ourMesh.vertex, GL_STATIC_DRAW);
+			glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 			glGenBuffers(1, (GLuint*)&(ourMesh.id_index));
 			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ourMesh.id_index);
 			glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * ourMesh.num_index, ourMesh.index, GL_STATIC_DRAW);
+			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
 			meshes.push_back(ourMesh);
 		}
-		// Use scene->mNumMeshes to iterate on scene->mMeshes array
+
 		aiReleaseImport(scene);
 	}
 	else

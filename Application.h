@@ -20,16 +20,17 @@
 
 #include "PugiXml/src/pugixml.hpp"
 
-// Include Modules
-#include "Module.h"
-#include "ModuleWindow.h"
-#include "ModuleInput.h"
-#include "ModuleSceneIntro.h"
-#include "Editor.h"
-#include "ModuleRenderer3D.h"
-#include "ModuleCamera3D.h"
-#include "ModulePhysics3D.h"
-#include "FbxLoader.h"
+// Modules
+class ModuleWindow;
+class ModuleInput;
+class ModuleSceneIntro;
+class Editor;
+class ModuleRenderer3D;
+class ModuleCamera3D;
+class ModulePhysics3D;
+class Logger;
+class FbxLoader;
+class FileSystem;
 
 #define CONFIG_FILNAME "config.xml"
 
@@ -45,6 +46,7 @@ public:
 	ModulePhysics3D* physics;
 	Logger* log;
 	FbxLoader* fbx;
+	FileSystem* fileSystem;
 	
 	SDL_GLContext gl_context;
 
@@ -84,8 +86,6 @@ public:
 	float fogStart = 10.0f;
 	float fogEnd = 40.0f;
 	float fogDensity = 1.0f;
-
-	bool wireframe = true;
 
 private:
 	

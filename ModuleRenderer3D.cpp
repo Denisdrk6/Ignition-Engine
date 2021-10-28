@@ -1,7 +1,11 @@
 #include "Globals.h"
 #include "Application.h"
 #include "ModuleRenderer3D.h"
+#include "Math/float3.h"
 //#include "SDL\include\SDL_opengl.h"
+
+#include "ModuleCamera3D.h"
+#include "FbxLoader.h"
 
 #pragma comment (lib, "glu32.lib")    /* link OpenGL Utility lib     */
 #pragma comment (lib, "opengl32.lib") /* link Microsoft OpenGL lib   */
@@ -17,7 +21,7 @@ ModuleRenderer3D::~ModuleRenderer3D()
 // Called before render is available
 bool ModuleRenderer3D::Init()
 {
-	MYLOG("Creating 3D Renderer context");
+	App->log->AddLog("Creating 3D Renderer context\n");
 	bool ret = true;
 
 	gl_context = SDL_GL_CreateContext(App->window->window);
@@ -79,7 +83,7 @@ bool ModuleRenderer3D::Init()
 	{
 		//Use Vsync
 		if(vsync && SDL_GL_SetSwapInterval(1) < 0)
-			MYLOG("Warning: Unable to set VSync! SDL Error: %s\n", SDL_GetError());
+			App->log->AddLog("Warning: Unable to set VSync! SDL Error: %s\n", SDL_GetError());
 
 		//Initialize Projection Matrix
 		glMatrixMode(GL_PROJECTION);
@@ -89,7 +93,7 @@ bool ModuleRenderer3D::Init()
 		GLenum error = glGetError();
 		if(error != GL_NO_ERROR)
 		{
-			MYLOG("Error initializing OpenGL! %s\n", gluErrorString(error));
+			App->log->AddLog("Error initializing OpenGL! %s\n", gluErrorString(error));
 			ret = false;
 		}
 
@@ -101,7 +105,7 @@ bool ModuleRenderer3D::Init()
 		error = glGetError();
 		if(error != GL_NO_ERROR)
 		{
-			MYLOG("Error initializing OpenGL! %s\n", gluErrorString(error));
+			App->log->AddLog("Error initializing OpenGL! %s\n", gluErrorString(error));
 			ret = false;
 		}
 		
@@ -115,7 +119,7 @@ bool ModuleRenderer3D::Init()
 		error = glGetError();
 		if(error != GL_NO_ERROR)
 		{
-			MYLOG("Error initializing OpenGL! %s\n", gluErrorString(error));
+			App->log->AddLog("Error initializing OpenGL! %s\n", gluErrorString(error));
 			ret = false;
 		}
 		
@@ -168,7 +172,7 @@ bool ModuleRenderer3D::Init()
 	// Calculate projection matrix
 	OnResize(App->window->width, App->window->height);
 
-	if(!App->wireframe) glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	if(!wireframe) glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	else glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
 	return ret;
@@ -228,7 +232,7 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 // Called before quitting
 bool ModuleRenderer3D::CleanUp()
 {
-	MYLOG("Destroying 3D Renderer");
+	App->log->AddLog("Destroying 3D Renderer\n");
 
 	ImGui_ImplOpenGL2_Shutdown();
 	ImGui_ImplSDL2_Shutdown();
@@ -257,7 +261,7 @@ bool ModuleRenderer3D::DrawMesh(MeshStorage mesh)
 {
 	bool ret = true;
 
-	if (!App->wireframe) glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	if (!wireframe) glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	else glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
 	//LOAD FBX 2
@@ -265,8 +269,22 @@ bool ModuleRenderer3D::DrawMesh(MeshStorage mesh)
 	glBindBuffer(GL_ARRAY_BUFFER, mesh.id_vertex);
 	glVertexPointer(3, GL_FLOAT, 0, NULL);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh.id_index);
+	
 	//LOAD FBX 4
 	glDrawElements(GL_TRIANGLES, mesh.num_index, GL_UNSIGNED_INT, NULL);
+
+	//Draw normals
+	if (drawNormals)
+	{
+		glBegin(GL_LINES);
+		for (int i = 0; i < mesh.vertexData.size(); i++)
+		{
+			float3 line = mesh.vertexData[i].normals;
+
+			glVertex3f(line.x, line.y, line.z);
+		}
+		glEnd();
+	}
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);

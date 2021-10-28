@@ -1,6 +1,7 @@
 #include "Globals.h"
 #include "Application.h"
 #include "ModuleCamera3D.h"
+#include "ModuleInput.h"
 
 ModuleCamera3D::ModuleCamera3D(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
@@ -20,7 +21,7 @@ ModuleCamera3D::~ModuleCamera3D()
 // -----------------------------------------------------------------
 bool ModuleCamera3D::Start()
 {
-	MYLOG("Setting up the camera");
+	App->log->AddLog("Setting up the camera\n");
 	bool ret = true;
 
 	return ret;
@@ -29,7 +30,7 @@ bool ModuleCamera3D::Start()
 // -----------------------------------------------------------------
 bool ModuleCamera3D::CleanUp()
 {
-	MYLOG("Cleaning camera");
+	App->log->AddLog("Cleaning camera\n");
 
 	return true;
 }
