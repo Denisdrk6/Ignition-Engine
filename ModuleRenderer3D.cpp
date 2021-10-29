@@ -277,10 +277,49 @@ bool ModuleRenderer3D::DrawMesh(MeshStorage mesh)
 	if (drawNormals)
 	{
 		glBegin(GL_LINES);
-		for (int i = 0; i < mesh.vertexData.size(); i++)
+		// Vertex normals
+		/*for (int i = 0; i < mesh.vertexData.size(); i++)
 		{
-			float3 line = mesh.vertexData[i].normals;
+			float3 line = mesh.vertexData[i].normals + mesh.vertexData[i].position;
+			glVertex3f(mesh.vertexData[i].position.x, mesh.vertexData[i].position.y, mesh.vertexData[i].position.z);
+			glVertex3f(line.x, line.y, line.z);
+		}*/
 
+		// Face normals
+		/*for (int i = 0; i <= mesh.vertexData.size() - 3; i += 3)
+		{
+			float3 centerPos;
+			centerPos.x = (mesh.vertexData[i].position.x + mesh.vertexData[i + 1].position.x + mesh.vertexData[i + 2].position.x) / 3;
+			centerPos.y = (mesh.vertexData[i].position.y + mesh.vertexData[i + 1].position.y + mesh.vertexData[i + 2].position.y) / 3;
+			centerPos.z = (mesh.vertexData[i].position.z + mesh.vertexData[i + 1].position.z + mesh.vertexData[i + 2].position.z) / 3;
+
+			float3 centerNormal;
+			centerNormal.x = (mesh.vertexData[i].normals.x + mesh.vertexData[i + 1].normals.x + mesh.vertexData[i + 2].normals.x) / 3;
+			centerNormal.y = (mesh.vertexData[i].normals.y + mesh.vertexData[i + 1].normals.y + mesh.vertexData[i + 2].normals.y) / 3;
+			centerNormal.z = (mesh.vertexData[i].normals.z + mesh.vertexData[i + 1].normals.z + mesh.vertexData[i + 2].normals.z) / 3;
+
+
+			float3 line = centerNormal + centerPos;
+			glVertex3f(centerPos.x, centerPos.y, centerPos.z);
+			glVertex3f(line.x, line.y, line.z);
+		}*/
+
+		for (int i = 0; i < mesh.indexes.size()-3; i+=3)
+		{
+			float3 centerPos;
+			centerPos.x = (mesh.vertexData[mesh.indexes[i]].position.x + mesh.vertexData[mesh.indexes[i + 1]].position.x + mesh.vertexData[mesh.indexes[i + 2]].position.x) / 3;
+			centerPos.y = (mesh.vertexData[mesh.indexes[i]].position.y + mesh.vertexData[mesh.indexes[i + 1]].position.y + mesh.vertexData[mesh.indexes[i + 2]].position.y) / 3;
+			centerPos.z = (mesh.vertexData[mesh.indexes[i]].position.z + mesh.vertexData[mesh.indexes[i + 1]].position.z + mesh.vertexData[mesh.indexes[i + 2]].position.z) / 3;
+
+			float3 centerNormal;
+			centerNormal.x = (mesh.vertexData[mesh.indexes[i]].normals.x + mesh.vertexData[mesh.indexes[i + 1]].normals.x + mesh.vertexData[mesh.indexes[i + 2]].normals.x) / 3;
+			centerNormal.y = (mesh.vertexData[mesh.indexes[i]].normals.y + mesh.vertexData[mesh.indexes[i + 1]].normals.y + mesh.vertexData[mesh.indexes[i + 2]].normals.y) / 3;
+			centerNormal.z = (mesh.vertexData[mesh.indexes[i]].normals.z + mesh.vertexData[mesh.indexes[i + 1]].normals.z + mesh.vertexData[mesh.indexes[i + 2]].normals.z) / 3;
+			centerNormal.Normalize();
+
+
+			float3 line = centerNormal + centerPos;
+			glVertex3f(centerPos.x, centerPos.y, centerPos.z);
 			glVertex3f(line.x, line.y, line.z);
 		}
 		glEnd();

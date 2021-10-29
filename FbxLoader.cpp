@@ -52,7 +52,7 @@ void FbxLoader::LoadFbx(const char* fileName)
 {
 	MeshStorage ourMesh;
 	//aiImportFileEx();
-	const aiScene* scene = aiImportFile(fileName, aiProcessPreset_TargetRealtime_MaxQuality | aiProcess_FlipUVs);
+	const aiScene* scene = aiImportFile(fileName, aiProcessPreset_TargetRealtime_MaxQuality);
 	if (scene != nullptr && scene->HasMeshes())
 	{
 		for (int i = 0; i < scene->mNumMeshes; i++)
@@ -73,8 +73,15 @@ void FbxLoader::LoadFbx(const char* fileName)
 					if (mesh->mFaces[i].mNumIndices != 3)
 						App->log->AddLog("WARNING, geometry face with != 3 indices!\n");
 					else
+					{
 						memcpy(&ourMesh.index[i * 3], mesh->mFaces[i].mIndices, 3 * sizeof(uint));
+						ourMesh.indexes.push_back(mesh->mFaces[i].mIndices[0]);
+						ourMesh.indexes.push_back(mesh->mFaces[i].mIndices[1]);
+						ourMesh.indexes.push_back(mesh->mFaces[i].mIndices[2]);
+					}
 				}
+
+
 			}
 
 			// copy normals

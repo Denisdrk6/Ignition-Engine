@@ -28,6 +28,7 @@ struct MeshStorage {
 	uint num_vertex = 0;
 	float3* vertex = nullptr;
 	std::vector<VertexData> vertexData;
+	std::vector<uint> indexes;
 };
 
 class FbxLoader : public Module
