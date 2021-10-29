@@ -1,14 +1,14 @@
 <?xml version="1.0"?>
 <config>
 	<App name="Ignition Engine" org="CITM Students" maxFPS="60" />
-	<Window w="1684" h="1017" brightness="1" fullscreen="false" fulldesk="false" resizable="true" borderless="false" />
+	<Window w="1920" h="1137" brightness="1" fullscreen="false" fulldesk="false" resizable="true" borderless="false" />
 	<Renderer vsync="false" normals="true" wireframe="true" />
 	<Camera>
-		<Position x="-0.556259751" y="4.50154114" z="1.65133476" />
-		<Reference x="-2.25310278" y="0.908854127" z="0.214855731" />
-		<ArcballX x="0.646077573" y="0" z="-0.763177097" />
-		<ArcballY x="-0.648969412" y="0.526175678" z="-0.549394071" />
-		<ArcballZ x="0.401622117" y="0.850345373" z="0.339997113" />
+		<Position x="-5.0455265" y="9.79830456" z="22.5106544" />
+		<Reference x="-4.53946209" y="9.2347393" z="18.5327168" />
+		<ArcballX x="0.991921544" y="0" z="0.126189679" />
+		<ArcballY x="0.0175621249" y="0.990183473" z="-0.138050035" />
+		<ArcballZ x="-0.124971852" y="0.139171645" z="0.982345521" />
 	</Camera>
 	<OpenGL depthTest="false" cullFace="true" lightning="false" colorMaterial="true" texture2D="false" lineSmooth="false">
 		<Fog active="true" linear="true" expo="false" red="0.181999996" green="0.486000001" blue="0.949999988" start="10" end="40" density="0" />
