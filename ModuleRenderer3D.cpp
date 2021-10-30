@@ -266,43 +266,46 @@ bool ModuleRenderer3D::DrawMesh(MeshStorage mesh)
 
 	//LOAD FBX 2
 	glEnableClientState(GL_VERTEX_ARRAY);
+
+	//Texture buffer
+	glBindTexture(GL_TEXTURE_2D, mesh.id_texture);
+
+	//Texture coord buffer
+	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+	glBindBuffer(GL_ARRAY_BUFFER, mesh.id_texCoords);
+	glTexCoordPointer(2, GL_FLOAT, 0, NULL);
+
+	//Vertex buffer
 	glBindBuffer(GL_ARRAY_BUFFER, mesh.id_vertex);
 	glVertexPointer(3, GL_FLOAT, 0, NULL);
+
+	//Index buffer
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh.id_index);
-	
-	//LOAD FBX 4
+	//LOAD FBX 4: Draw geometry
 	glDrawElements(GL_TRIANGLES, mesh.num_index, GL_UNSIGNED_INT, NULL);
+
+	//Unbind buffers
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+	glBindTexture(GL_TEXTURE_2D, 0);
+
+	//Disable client states
+	glDisableClientState(GL_VERTEX_ARRAY);
+	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 
 	//Draw normals
 	if (drawNormals)
 	{
 		glBegin(GL_LINES);
 		// Vertex normals
-		/*for (int i = 0; i < mesh.vertexData.size(); i++)
+		for (int i = 0; i < mesh.vertexData.size(); i++)
 		{
 			float3 line = mesh.vertexData[i].normals + mesh.vertexData[i].position;
 			glVertex3f(mesh.vertexData[i].position.x, mesh.vertexData[i].position.y, mesh.vertexData[i].position.z);
 			glVertex3f(line.x, line.y, line.z);
-		}*/
+		}
 
 		// Face normals
-		/*for (int i = 0; i <= mesh.vertexData.size() - 3; i += 3)
-		{
-			float3 centerPos;
-			centerPos.x = (mesh.vertexData[i].position.x + mesh.vertexData[i + 1].position.x + mesh.vertexData[i + 2].position.x) / 3;
-			centerPos.y = (mesh.vertexData[i].position.y + mesh.vertexData[i + 1].position.y + mesh.vertexData[i + 2].position.y) / 3;
-			centerPos.z = (mesh.vertexData[i].position.z + mesh.vertexData[i + 1].position.z + mesh.vertexData[i + 2].position.z) / 3;
-
-			float3 centerNormal;
-			centerNormal.x = (mesh.vertexData[i].normals.x + mesh.vertexData[i + 1].normals.x + mesh.vertexData[i + 2].normals.x) / 3;
-			centerNormal.y = (mesh.vertexData[i].normals.y + mesh.vertexData[i + 1].normals.y + mesh.vertexData[i + 2].normals.y) / 3;
-			centerNormal.z = (mesh.vertexData[i].normals.z + mesh.vertexData[i + 1].normals.z + mesh.vertexData[i + 2].normals.z) / 3;
-
-
-			float3 line = centerNormal + centerPos;
-			glVertex3f(centerPos.x, centerPos.y, centerPos.z);
-			glVertex3f(line.x, line.y, line.z);
-		}*/
 
 		for (int i = 0; i < mesh.indexes.size(); i+=3)
 		{
@@ -323,10 +326,6 @@ bool ModuleRenderer3D::DrawMesh(MeshStorage mesh)
 		}
 		glEnd();
 	}
-
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-	glDisableClientState(GL_VERTEX_ARRAY);
 
 	return ret;
 }

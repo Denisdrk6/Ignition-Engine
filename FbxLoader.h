@@ -1,12 +1,17 @@
 #ifndef __FbxLoader_H__
 #define __FbxLoader_H__
 
+#define CHECKERS_HEIGHT 64
+#define CHECKERS_WIDTH 64
+
 #include "Module.h"
 #include "Globals.h"
 #include <vector>
 #include "Math/float4.h"
 #include "Math/float3.h"
 #include "Math/float2.h"
+
+#include "glew.h"
 
 #include "Assimp/cimport.h"
 #include "Assimp/scene.h"
@@ -24,9 +29,17 @@ struct MeshStorage {
 	uint id_index = 0; // index in VRAM
 	uint num_index = 0;
 	uint* index = nullptr;
+
 	uint id_vertex = 0; // unique vertex in VRAM
 	uint num_vertex = 0;
 	float3* vertex = nullptr;
+
+	uint id_texCoords = 0;
+	float2* texCoords = nullptr;
+
+	uint id_texture = 0;
+	GLubyte checkerImage[CHECKERS_HEIGHT][CHECKERS_WIDTH][4];
+
 	std::vector<VertexData> vertexData;
 	std::vector<uint> indexes;
 };
@@ -49,6 +62,8 @@ private:
 
 	// Stream log messages to Debug window
 	struct aiLogStream stream;
+
+	GLubyte checkerImage[CHECKERS_HEIGHT][CHECKERS_WIDTH][4];
 };
 
 #endif // __FbxLoader_H__
