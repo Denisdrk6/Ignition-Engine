@@ -44,5 +44,5 @@ public:
 
 	bool drawNormals = false;
 
-	bool wireframe = true;
+	bool wireframe = false;
 };

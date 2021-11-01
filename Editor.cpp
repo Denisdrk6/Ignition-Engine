@@ -67,12 +67,6 @@ update_status Editor::Update(float dt)
 		{
 			if (ImGui::MenuItem("GuiDemo")) showcaseDemo = !showcaseDemo;
 
-			if (ImGui::MenuItem("Documentation")) App->RequestBrowser("https://github.com/d0n3val/Edu-Game-Engine/wiki");
-
-			if (ImGui::MenuItem("Download latest")) App->RequestBrowser("https://github.com/d0n3val/Edu-Game-Engine/releases");
-
-			if (ImGui::MenuItem("Report a bug")) App->RequestBrowser("https://github.com/d0n3val/Edu-Game-Engine/issues");
-
 			if (ImGui::TreeNode("About"))
 			{
 				ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{ 0.15f , 0.96f , 0.33f , 0.05f });
