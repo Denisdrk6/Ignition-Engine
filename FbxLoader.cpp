@@ -78,40 +78,11 @@ void FbxLoader::LoadFbx(const char* fileName)
 			const aiMesh* mesh = scene->mMeshes[i];
 
 			// copy vertices
-			/*ourMesh.num_vertex = mesh->mNumVertices;
-			ourMesh.vertex = new float[ourMesh.num_vertex * 5]; // Each vertex has 3 coordinates
 			
-			for (int i = 0; i < mesh->mNumVertices; i++)
-			{
-				ourMesh.vertex[i * 5] = mesh->mVertices[i].x;
-				ourMesh.vertex[i * 5 + 1] = mesh->mVertices[i].y;
-				ourMesh.vertex[i * 5 + 2] = mesh->mVertices[i].z;
-
-				if (mesh->HasTextureCoords(0))
-				{
-					ourMesh.vertex[i * 5 + 3] = mesh->mTextureCoords[0][i].x;
-					ourMesh.vertex[i * 5 + 4] = mesh->mTextureCoords[0][i].y;
-				}
-				else
-				{
-					ourMesh.vertex[i * 5 + 3] = 0.0f;
-					ourMesh.vertex[i * 5 + 4] = 0.0f;
-				}
-			}*/
 
 			ourMesh.num_vertex = mesh->mNumVertices;
 			ourMesh.vertex = new float3[ourMesh.num_vertex]; // Each vertex has 3 coordinates
 			memcpy(ourMesh.vertex, mesh->mVertices, sizeof(float) * ourMesh.num_vertex * 3);
-
-
-
-
-
-
-
-
-
-
 
 			// copy faces
 			if (mesh->HasFaces())
@@ -183,16 +154,6 @@ void FbxLoader::LoadFbx(const char* fileName)
 				ourMesh.vertexData.push_back(tempData);
 			}
 
-			//LOAD FBX 1
-			//glGenVertexArrays(1, (GLuint*)&ourMesh.id_vertexArray);
-			//glBindVertexArray(ourMesh.id_vertexArray);
-
-
-			//glEnableVertexAttribArray(0);
-			//glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float3), (void*)0);
-			//glEnableVertexAttribArray(1);
-			//glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(float2), (void*)ourMesh.num_vertex);
-
 			//Vertices
 			glGenBuffers(1, (GLuint*)&(ourMesh.id_vertex));
 			glBindBuffer(GL_ARRAY_BUFFER, ourMesh.id_vertex);
@@ -213,54 +174,6 @@ void FbxLoader::LoadFbx(const char* fileName)
 
 			// Establece como se guardan los pixeles
 			ourMesh.id_texture = LoadImageTexture("Assets/bakeHouse.png");
-			/*glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-			// Genera buffer de textura
-			glGenTextures(1, &ourMesh.id_texture);
-			// Decimos a OpenGL que trabajamos con este buffer de textura
-			glBindTexture(GL_TEXTURE_2D, ourMesh.id_texture);
-			// Parametros de la textura
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-			// Establece los datos de la textura (como glBufferData)
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, CHECKERS_WIDTH, CHECKERS_HEIGHT,
-				0, GL_RGBA, GL_UNSIGNED_BYTE, ourMesh.checkerImage);
-			// Unbind del buffer de la textura
-			glBindTexture(GL_TEXTURE_2D, 0);*/
-
-
-			
-
-
-			/*glGenVertexArrays(1, &ourMesh.vao);
-			glBindVertexArray(ourMesh.vao);
-
-			glGenBuffers(1, (GLuint*)&(ourMesh.id_vertex));
-			glBindBuffer(GL_ARRAY_BUFFER, ourMesh.id_vertex);
-			glBufferData(GL_ARRAY_BUFFER, sizeof(float)* ourMesh.num_vertex * 5, ourMesh.vertex, GL_STATIC_DRAW);
-
-			glEnableVertexAttribArray(0);
-			glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 5, 0);
-			
-			glEnableVertexAttribArray(1);
-			glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 5, (const void*)(sizeof(float) * 3));
-			
-
-			glGenBuffers(1, (GLuint*)&(ourMesh.id_index));
-			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ourMesh.id_index);
-			glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint)* ourMesh.num_index, ourMesh.index, GL_STATIC_DRAW);*/
-
-
-
-			//glBindBuffer(GL_ARRAY_BUFFER, 0);
-			//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-			//glBindVertexArray(0);
-
-
-
-
-
 
 			meshes.push_back(ourMesh);
 		}

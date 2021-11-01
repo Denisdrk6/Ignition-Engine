@@ -1,6 +1,7 @@
 #pragma once
 #include "Module.h"
 #include "Globals.h"
+#include "GameObject.h"
 //#pragma comment( lib, "SDL/libx86/SDL2.lib" )
 //#pragma comment( lib, "SDL/libx86/SDL2main.lib" )
 
@@ -17,6 +18,7 @@ public:
 	update_status Update(float dt);
 	bool CleanUp();
 
-private:
+	GameObject* CreateGameObject();
 
+	std::vector<GameObject*> game_objects;
 };
