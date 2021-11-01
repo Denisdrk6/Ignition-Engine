@@ -37,8 +37,8 @@ struct Logger
     {
         if (window != nullptr)
         {
-            ImGui::SetNextWindowSize({ (float)window->width - 300.0f, 200.0f });
-            ImGui::SetNextWindowPos({ 300.0f, (float)window->height - 200.0f });
+            ImGui::SetNextWindowSize({ (float)window->width, 200.0f });
+            ImGui::SetNextWindowPos({ 0, (float)window->height - 200.0f });
         }
 
         if (!ImGui::Begin(title, p_open, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize))

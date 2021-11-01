@@ -3,6 +3,8 @@
 #include "ModuleSceneIntro.h"
 #include "Primitive.h"
 
+#include "imgui/imgui.h"
+
 #include "FbxLoader.h"
 #include "ModuleCamera3D.h"
 #include "ModuleRenderer3D.h"
@@ -21,7 +23,7 @@ bool ModuleSceneIntro::Start()
 	bool ret = true;
     App->fbx->LoadFbx("Assets/BakerHouse.fbx");
 
-   game_objects.push_back(CreateGameObject());
+   //game_objects.push_back(CreateGameObject());
 
 	return ret;
 }
@@ -83,4 +85,57 @@ GameObject* ModuleSceneIntro::CreateGameObject()
     GameObject* gameObject = new GameObject();
 
     return gameObject;
+}
+
+void ModuleSceneIntro::DrawHierarchy()
+{
+
+    ImGui::SetNextWindowSize({ 300.0f, (float)App->window->height - 220.0f });
+    ImGui::SetNextWindowPos({ 0.0f, 20.0f }); // Main menu bar is 20px high
+
+    ImGui::Begin("Hierarchy", (bool*)true, ImGuiWindowFlags_NoCollapse); // Cannot be manually closed by user
+
+    for (int i = 0; i < game_objects.size(); i++)
+    {
+        if (game_objects[i]->children.size() > 0)
+        {
+            if (ImGui::TreeNodeEx(game_objects[i]->name.c_str()))
+            {
+                for (int j = 0; j < game_objects[i]->children.size(); j++)
+                {
+                    DrawRecursive(game_objects[i]->children[j]);
+                }
+                ImGui::TreePop();
+            }
+        }
+
+        else
+        {
+            ImGui::Text(game_objects[i]->name.c_str());
+        }
+    }
+
+    //if (ImGui::IsItemClicked())
+
+    ImGui::End();
+}
+
+void ModuleSceneIntro::DrawRecursive(GameObject* parent)
+{
+    if (parent->children.size() > 0)
+    {
+        if (ImGui::TreeNodeEx(parent->name.c_str()))
+        {
+            for (int j = 0; j < parent->children.size(); j++)
+            {
+                DrawRecursive(parent->children[j]);
+            }
+            ImGui::TreePop();
+        }
+    }
+
+    else
+    {
+        ImGui::Text(parent->name.c_str());
+    }
 }

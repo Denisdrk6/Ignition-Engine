@@ -193,11 +193,11 @@
     <ClCompile Include="FbxLoader.cpp">
       <Filter>Modules</Filter>
     </ClCompile>
-    <ClCompile Include="FileSystem.cpp">
-      <Filter>Modules</Filter>
-    </ClCompile>
     <ClCompile Include="GameObject.cpp">
       <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="FileSystem.cpp">
+      <Filter>Modules</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -518,9 +518,6 @@
     <ClInclude Include="FbxLoader.h">
       <Filter>Modules</Filter>
     </ClInclude>
-    <ClInclude Include="FileSystem.h">
-      <Filter>Modules</Filter>
-    </ClInclude>
     <ClInclude Include="GameObject.h">
       <Filter>Engine</Filter>
     </ClInclude>
@@ -535,6 +532,9 @@
     </ClInclude>
     <ClInclude Include="ComponentMaterial.h">
       <Filter>Engine\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="FileSystem.h">
+      <Filter>Modules</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -1,11 +1,14 @@
 #include "GameObject.h"
 #include "Component.h"
 #include "ComponentTransform.h"
+#include "ComponentMesh.h"
+#include "ComponentMaterial.h"
 #include "Globals.h"
 
 GameObject::GameObject()
 {
-	components.push_back(CreateComponent(ComponentType::TRANSFORM));
+	transform = (ComponentTransform*)CreateComponent(ComponentType::TRANSFORM);
+	components.push_back(transform);
 }
 
 Component* GameObject::CreateComponent(ComponentType type)
@@ -17,6 +20,14 @@ Component* GameObject::CreateComponent(ComponentType type)
 	{
 	case ComponentType::TRANSFORM:
 		component = new ComponentTransform();
+		component->owner = this;
+		break;
+	case ComponentType::MESH:
+		component = new ComponentMesh();
+		component->owner = this;
+		break;
+	case ComponentType::MATERIAL:
+		component = new ComponentMaterial();
 		component->owner = this;
 		break;
 	default:

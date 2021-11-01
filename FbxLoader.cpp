@@ -1,4 +1,10 @@
 #include "FbxLoader.h"
+#include "GameObject.h"
+#include "ModuleSceneIntro.h"
+#include "Component.h"
+#include "ComponentTransform.h"
+#include "ComponentMesh.h"
+#include "ComponentMaterial.h"
 #include "Application.h"
 #include "DevIL/include/ilu.h"
 #include "DevIL/include/ilut.h"
@@ -68,9 +74,15 @@ bool FbxLoader::CleanUp()
 
 void FbxLoader::LoadFbx(const char* fileName)
 {
+	const aiScene* scene = aiImportFile(fileName, aiProcess_FlipUVs | aiProcessPreset_TargetRealtime_MaxQuality);
+
+	aiNode* root = scene->mRootNode;
+
+	RecursiveLoad(root, nullptr, scene);
+
 	MeshStorage ourMesh;
 	//aiImportFileEx();
-	const aiScene* scene = aiImportFile(fileName, aiProcess_FlipUVs  | aiProcessPreset_TargetRealtime_MaxQuality);
+	//const aiScene* scene = aiImportFile(fileName, aiProcess_FlipUVs  | aiProcessPreset_TargetRealtime_MaxQuality);
 	if (scene != nullptr && scene->HasMeshes())
 	{
 		for (int i = 0; i < scene->mNumMeshes; i++)
@@ -173,7 +185,7 @@ void FbxLoader::LoadFbx(const char* fileName)
 			glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 			// Establece como se guardan los pixeles
-			ourMesh.id_texture = LoadImageTexture("Assets/bakeHouse.png");
+			ourMesh.id_texture = LoadImageTexture("Assets/Baker_house.png");
 
 			meshes.push_back(ourMesh);
 		}
@@ -182,6 +194,46 @@ void FbxLoader::LoadFbx(const char* fileName)
 	}
 	else
 		App->log->AddLog("Error loading scene %s\n", fileName);
+}
+
+void FbxLoader::RecursiveLoad(aiNode* node, GameObject* parentObject, const aiScene* scene)
+{
+	GameObject* gameObject = new GameObject();
+	gameObject->name = node->mName.C_Str();
+
+	aiVector3D translation, scaling;
+	aiQuaternion rotation;
+	node->mTransformation.Decompose(scaling, rotation, translation);
+
+	gameObject->transform->scale = { translation.x, translation.y, translation.z };
+	gameObject->transform->rotation = { rotation.x, rotation.y, rotation.z, rotation.w };
+	gameObject->transform->position = { translation.x, translation.y, translation.z };
+
+	gameObject->parent = parentObject;
+
+	for (int i = 0; i < node->mNumMeshes; i++)
+	{
+		const aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
+
+		aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
+		uint numTextures = material->GetTextureCount(aiTextureType_DIFFUSE);
+		
+		aiString path;
+		material->GetTexture(aiTextureType_DIFFUSE, 0, &path);
+
+		std::string texName = "Assets/";
+		texName += path.C_Str();
+
+		gameObject->CreateComponent(ComponentType::MATERIAL);
+	}
+
+	for (int i = 0; i < node->mNumChildren; i++)
+	{
+		RecursiveLoad(node->mChildren[i], gameObject, scene);
+	}
+
+	if (parentObject != nullptr) parentObject->children.push_back(gameObject);
+	else App->scene_intro->game_objects.push_back(gameObject);
 }
 
 GLuint FbxLoader::LoadImageTexture(const char* path)

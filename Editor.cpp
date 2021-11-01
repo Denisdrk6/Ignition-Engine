@@ -4,6 +4,7 @@
 
 #include "ModuleInput.h"
 #include "ModuleRenderer3D.h"
+#include "ModuleSceneIntro.h"
 
 Editor::Editor(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
@@ -221,8 +222,8 @@ update_status Editor::Update(float dt)
 
 	if (config)
 	{
-		ImGui::SetNextWindowSize({ 300.0f, (float)App->window->height - 20.0f });
-		ImGui::SetNextWindowPos({ 0.0f, 20.0f }); // Main menu bar is 20px high
+		ImGui::SetNextWindowSize({ 300.0f, (float)App->window->height - 220.0f });
+		ImGui::SetNextWindowPos({ (float)App->window->width - 300.0f, 20.0f }); // Main menu bar is 20px high
 
 		if (config)
 			ImGui::Begin("Configuration", NULL, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse); // Cannot be manually closed by user
@@ -524,6 +525,8 @@ update_status Editor::Update(float dt)
 
 		ImGui::End();
 	}
+
+	App->scene_intro->DrawHierarchy();
 
 	return update_status::UPDATE_CONTINUE;
 }

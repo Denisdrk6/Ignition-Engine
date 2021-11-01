@@ -5,6 +5,7 @@
 //#include "Component.h"
 class Component;
 enum class ComponentType;
+class ComponentTransform;
 
 class GameObject {
 public:
@@ -19,4 +20,9 @@ public:
 	bool active = true;
 	std::string name = "\0";
 	std::vector<Component*> components;
+
+	GameObject* parent = nullptr;
+	std::vector<GameObject*> children;
+
+	ComponentTransform* transform;
 };

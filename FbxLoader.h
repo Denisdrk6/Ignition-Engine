@@ -18,6 +18,8 @@
 #include "Assimp/postprocess.h"
 #pragma comment (lib, "Assimp/libx86/assimp-vc142-mt.lib")
 
+class GameObject;
+
 struct VertexData {
 	float4 color;
 	float3 position;
@@ -61,6 +63,7 @@ public:
 	std::vector< MeshStorage > meshes;
 
 	GLuint LoadImageTexture(const char* filePath);
+	void RecursiveLoad(aiNode* node, GameObject* parent, const aiScene* scene);
 
 private:
 
