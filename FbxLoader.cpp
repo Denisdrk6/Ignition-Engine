@@ -1,5 +1,10 @@
 #include "FbxLoader.h"
 #include "Application.h"
+#include "DevIL/include/ilu.h"
+#include "DevIL/include/ilut.h"
+#pragma comment (lib, "DevIL/libx86/DevIL.lib")
+#pragma comment (lib, "DevIL/libx86/ILU.lib")
+#pragma comment (lib, "DevIL/libx86/ILUT.lib")
 
 // Contructr
 FbxLoader::FbxLoader(Application* app, bool start_enabled) : Module(app, start_enabled)
@@ -33,6 +38,9 @@ bool FbxLoader::Init()
 		}
 	}
 
+	ilInit();
+	ilutRenderer(ILUT_OPENGL);
+
 	return ret;
 }
 
@@ -62,7 +70,7 @@ void FbxLoader::LoadFbx(const char* fileName)
 {
 	MeshStorage ourMesh;
 	//aiImportFileEx();
-	const aiScene* scene = aiImportFile(fileName, aiProcessPreset_TargetRealtime_MaxQuality);
+	const aiScene* scene = aiImportFile(fileName, aiProcess_FlipUVs  | aiProcessPreset_TargetRealtime_MaxQuality);
 	if (scene != nullptr && scene->HasMeshes())
 	{
 		for (int i = 0; i < scene->mNumMeshes; i++)
@@ -70,9 +78,40 @@ void FbxLoader::LoadFbx(const char* fileName)
 			const aiMesh* mesh = scene->mMeshes[i];
 
 			// copy vertices
+			/*ourMesh.num_vertex = mesh->mNumVertices;
+			ourMesh.vertex = new float[ourMesh.num_vertex * 5]; // Each vertex has 3 coordinates
+			
+			for (int i = 0; i < mesh->mNumVertices; i++)
+			{
+				ourMesh.vertex[i * 5] = mesh->mVertices[i].x;
+				ourMesh.vertex[i * 5 + 1] = mesh->mVertices[i].y;
+				ourMesh.vertex[i * 5 + 2] = mesh->mVertices[i].z;
+
+				if (mesh->HasTextureCoords(0))
+				{
+					ourMesh.vertex[i * 5 + 3] = mesh->mTextureCoords[0][i].x;
+					ourMesh.vertex[i * 5 + 4] = mesh->mTextureCoords[0][i].y;
+				}
+				else
+				{
+					ourMesh.vertex[i * 5 + 3] = 0.0f;
+					ourMesh.vertex[i * 5 + 4] = 0.0f;
+				}
+			}*/
+
 			ourMesh.num_vertex = mesh->mNumVertices;
 			ourMesh.vertex = new float3[ourMesh.num_vertex]; // Each vertex has 3 coordinates
 			memcpy(ourMesh.vertex, mesh->mVertices, sizeof(float) * ourMesh.num_vertex * 3);
+
+
+
+
+
+
+
+
+
+
 
 			// copy faces
 			if (mesh->HasFaces())
@@ -96,7 +135,7 @@ void FbxLoader::LoadFbx(const char* fileName)
 			}
 
 			// Default checker texture
-			for (int i = 0; i < CHECKERS_HEIGHT; i++) {
+			/*for (int i = 0; i < CHECKERS_HEIGHT; i++) {
 				for (int j = 0; j < CHECKERS_WIDTH; j++) {
 					int c = ((((i & 0x8) == 0) ^ (((j & 0x8)) == 0))) * 255;
 					ourMesh.checkerImage[i][j][0] = (GLubyte)c;
@@ -104,14 +143,19 @@ void FbxLoader::LoadFbx(const char* fileName)
 					ourMesh.checkerImage[i][j][2] = (GLubyte)c;
 					ourMesh.checkerImage[i][j][3] = (GLubyte)255;
 				}
-			}
+			}*/
 
 
 			// copy tex coords
 			if (mesh->HasTextureCoords(0))
 			{
 				ourMesh.texCoords = new float2[mesh->mNumVertices]; // El array de texCoords tiene tamaño mNumVertices
-				memcpy(ourMesh.texCoords, mesh->mTextureCoords[0], sizeof(float) * ourMesh.num_vertex * 2);
+
+				for (int i = 0; i < mesh->mNumVertices; i++)
+				{
+					ourMesh.texCoords[i].x = mesh->mTextureCoords[0][i].x;
+					ourMesh.texCoords[i].y = mesh->mTextureCoords[0][i].y;
+				}
 			}
 
 			// copy normals
@@ -149,23 +193,27 @@ void FbxLoader::LoadFbx(const char* fileName)
 			//glEnableVertexAttribArray(1);
 			//glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(float2), (void*)ourMesh.num_vertex);
 
+			//Vertices
 			glGenBuffers(1, (GLuint*)&(ourMesh.id_vertex));
 			glBindBuffer(GL_ARRAY_BUFFER, ourMesh.id_vertex);
 			glBufferData(GL_ARRAY_BUFFER, sizeof(float) * ourMesh.num_vertex * 3, ourMesh.vertex, GL_STATIC_DRAW);
 			glBindBuffer(GL_ARRAY_BUFFER, 0);
 
+			//Indices
 			glGenBuffers(1, (GLuint*)&(ourMesh.id_index));
 			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ourMesh.id_index);
-			glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * ourMesh.num_index, ourMesh.index, GL_STATIC_DRAW);
+			glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint)* ourMesh.num_index, ourMesh.index, GL_STATIC_DRAW);
 			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
+			//Coordenadas de texturas
 			glGenBuffers(1, (GLuint*)&(ourMesh.id_texCoords));
 			glBindBuffer(GL_ARRAY_BUFFER, ourMesh.id_texCoords);
 			glBufferData(GL_ARRAY_BUFFER, sizeof(float) * ourMesh.num_vertex * 2, ourMesh.texCoords, GL_STATIC_DRAW);
 			glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 			// Establece como se guardan los pixeles
-			glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+			ourMesh.id_texture = LoadImageTexture("Assets/bakeHouse.png");
+			/*glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 			// Genera buffer de textura
 			glGenTextures(1, &ourMesh.id_texture);
 			// Decimos a OpenGL que trabajamos con este buffer de textura
@@ -179,7 +227,40 @@ void FbxLoader::LoadFbx(const char* fileName)
 			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, CHECKERS_WIDTH, CHECKERS_HEIGHT,
 				0, GL_RGBA, GL_UNSIGNED_BYTE, ourMesh.checkerImage);
 			// Unbind del buffer de la textura
-			glBindTexture(GL_TEXTURE_2D, 0);
+			glBindTexture(GL_TEXTURE_2D, 0);*/
+
+
+			
+
+
+			/*glGenVertexArrays(1, &ourMesh.vao);
+			glBindVertexArray(ourMesh.vao);
+
+			glGenBuffers(1, (GLuint*)&(ourMesh.id_vertex));
+			glBindBuffer(GL_ARRAY_BUFFER, ourMesh.id_vertex);
+			glBufferData(GL_ARRAY_BUFFER, sizeof(float)* ourMesh.num_vertex * 5, ourMesh.vertex, GL_STATIC_DRAW);
+
+			glEnableVertexAttribArray(0);
+			glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 5, 0);
+			
+			glEnableVertexAttribArray(1);
+			glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 5, (const void*)(sizeof(float) * 3));
+			
+
+			glGenBuffers(1, (GLuint*)&(ourMesh.id_index));
+			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ourMesh.id_index);
+			glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint)* ourMesh.num_index, ourMesh.index, GL_STATIC_DRAW);*/
+
+
+
+			//glBindBuffer(GL_ARRAY_BUFFER, 0);
+			//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+			//glBindVertexArray(0);
+
+
+
+
+
 
 			meshes.push_back(ourMesh);
 		}
@@ -188,4 +269,44 @@ void FbxLoader::LoadFbx(const char* fileName)
 	}
 	else
 		App->log->AddLog("Error loading scene %s\n", fileName);
+}
+
+GLuint FbxLoader::LoadImageTexture(const char* path)
+{
+	ILuint imageName;
+	ilGenImages(1, &imageName); // Grab a new image name.
+	ilBindImage(imageName); // Bind image
+
+	if (!ilLoadImage(path))
+	{
+		ILenum error = ilGetError();
+		printf("%d: %s/n", error, iluErrorString(error));
+	}
+
+	int width, height;
+	width = ilGetInteger(IL_IMAGE_WIDTH);
+	height = ilGetInteger(IL_IMAGE_HEIGHT);
+
+
+	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+	//glGenTextures(1, &id_texture);
+	GLuint id_texture = ilutGLBindTexImage();
+	ILubyte* Data = ilGetData();
+	//glGenTextures(1, &texture);
+	// Decimos a OpenGL que trabajamos con este buffer de textura
+	glBindTexture(GL_TEXTURE_2D, id_texture);
+	// Parametros de la textura
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	// Establece los datos de la textura (como glBufferData)
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height,
+		0, GL_RGB, GL_UNSIGNED_BYTE, Data);
+	// Unbind del buffer de la textura
+	glBindTexture(GL_TEXTURE_2D, 0);
+
+	ilDeleteImages(1, &imageName); // Delete the image name.
+
+	return id_texture;
 }

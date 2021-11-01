@@ -264,32 +264,30 @@ bool ModuleRenderer3D::DrawMesh(MeshStorage mesh)
 	if (!wireframe) glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	else glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
-	//LOAD FBX 2
+
 	glEnableClientState(GL_VERTEX_ARRAY);
-
-	//Texture buffer
-	glBindTexture(GL_TEXTURE_2D, mesh.id_texture);
-
-	//Texture coord buffer
 	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-	glBindBuffer(GL_ARRAY_BUFFER, mesh.id_texCoords);
-	glTexCoordPointer(2, GL_FLOAT, 0, NULL);
 
-	//Vertex buffer
+	//-- Buffers--//
 	glBindBuffer(GL_ARRAY_BUFFER, mesh.id_vertex);
 	glVertexPointer(3, GL_FLOAT, 0, NULL);
 
-	//Index buffer
+	glBindBuffer(GL_ARRAY_BUFFER, mesh.id_texCoords);
+	glTexCoordPointer(2, GL_FLOAT, 0, NULL);
+
+	glBindTexture(GL_TEXTURE_2D, mesh.id_texture);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh.id_index);
-	//LOAD FBX 4: Draw geometry
+
+	//-- Draw --//
 	glDrawElements(GL_TRIANGLES, mesh.num_index, GL_UNSIGNED_INT, NULL);
 
-	//Unbind buffers
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	//-- UnBind Buffers--//
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindBuffer(GL_TEXTURE_COORD_ARRAY, 0);
 	glBindTexture(GL_TEXTURE_2D, 0);
 
-	//Disable client states
+	//--Disables States--//
 	glDisableClientState(GL_VERTEX_ARRAY);
 	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 

@@ -1,8 +1,8 @@
 #ifndef __FbxLoader_H__
 #define __FbxLoader_H__
 
-#define CHECKERS_HEIGHT 64
-#define CHECKERS_WIDTH 64
+#define CHECKERS_HEIGHT 128
+#define CHECKERS_WIDTH 128
 
 #include "Module.h"
 #include "Globals.h"
@@ -38,10 +38,12 @@ struct MeshStorage {
 	float2* texCoords = nullptr;
 
 	uint id_texture = 0;
-	GLubyte checkerImage[CHECKERS_HEIGHT][CHECKERS_WIDTH][4];
+	//GLubyte checkerImage[CHECKERS_HEIGHT][CHECKERS_WIDTH][4];
 
 	std::vector<VertexData> vertexData;
 	std::vector<uint> indexes;
+
+	uint vao;
 };
 
 class FbxLoader : public Module
@@ -57,6 +59,8 @@ public:
 	bool CleanUp();
 	void LoadFbx(const char* filePath);
 	std::vector< MeshStorage > meshes;
+
+	GLuint LoadImageTexture(const char* filePath);
 
 private:
 

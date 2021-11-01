@@ -32,7 +32,7 @@ bool ModuleSceneIntro::Start()
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * num_indices, indices, GL_STATIC_DRAW);*/
 
     //App->fbx->LoadFbx("Assets/warrior.fbx"); //Load an FBX file
-   App->fbx->LoadFbx("Assets/cube.fbx");
+   App->fbx->LoadFbx("Assets/BakerHouse.fbx");
 
 	return ret;
 }
